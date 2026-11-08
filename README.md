@@ -3,20 +3,19 @@
 **Institution:** Informatics Institute of Technology (IIT) in collaboration with University of Westminster  
 **Module:** Agile Team Project (ATP — 5COSC021W)  
 **Team ID:** Team 43 (CS-43)  
-**Jira Board:** `https://iit-team-v4kklicw.atlassian.net` (Project: `SCRUM` | Board ID: `1`)  
-**Repository Policy:** Governed by [`AGENTS.md`](./AGENTS.md) and [`logs.md`](./logs.md)  
+**Project Key:** `SCRUM` | **Board ID:** `1`  
 
 ---
 
 ## 1. Project Overview
 
-ALVI is an autonomous, in-home robotic caregiving companion designed to assist elderly individuals living independently and support remote caregivers. The system incorporates:
+ALVI is an autonomous, in-home robotic caregiving companion designed to assist elderly individuals living independently and support remote family caregivers. The system incorporates:
 * **P1: Automated 5-Cylinder Pill & Water Dispenser** with 3-step physical and vision AI intake verification (Google MediaPipe).
-* **P2: Conversational Voice AI Brain** (Faster-Whisper STT + LLM dialogue reasoning + Piper TTS).
+* **P2: Conversational Voice AI Pipeline** (Faster-Whisper STT + LLM dialogue reasoning + Piper TTS).
 * **P3: Zero-Latency Two-Way Video Calling** via LiveKit WebRTC.
 * **P4: Autonomous Indoor Mobile Navigation** (2D 360° LiDAR, Follow Me, Summon, and Visual Guidance modes).
 * **P5: Commercial Smartwatch Integration** (Live Heart Rate BPM over BLE UUID `0x180D`, Z-axis fall spike detection).
-* **P6: Caregiver Remote Web & Mobile Dashboard** (Real-time telemetry, pill scheduling, Twilio auto-alerts).
+* **P6: Caregiver Remote Web & Mobile Dashboard** (Real-time telemetry, pill scheduling, Twilio emergency auto-alerts).
 
 ---
 
@@ -44,16 +43,14 @@ ALVI is an autonomous, in-home robotic caregiving companion designed to assist e
 ## 4. Repository Structure
 
 ```text
-├── AGENTS.md               # Mandatory agent and team engineering protocol
-├── logs.md                 # Continuous Jira and repository audit log
-├── mcp_jira_guide.md       # Team MCP, Jira, and GitHub setup guide
+├── README.md               # Project architecture and team documentation
 ├── Consent Forms/          # Approved research ethics and participant consent documents
 ├── specs/                  # Coursework rubrics, MVP build specifications, and templates
 └── code/
     ├── landing-page/       # Next.js 14 marketing landing page with interactive 3D robot
-    ├── hardware-firmware/  # (Sprint 2) ESP32-S3 Arduino/C++ firmware
+    ├── caregiver-app/      # (Sprint 2) React caregiver dashboard & telemetry client
     ├── backend-fastapi/    # (Sprint 2) FastAPI REST & WebSocket server
-    └── caregiver-app/      # (Sprint 2) React caregiver dashboard & telemetry client
+    └── hardware-firmware/  # (Sprint 2) ESP32-S3 Arduino/C++ firmware
 ```
 
 ---
@@ -61,6 +58,9 @@ ALVI is an autonomous, in-home robotic caregiving companion designed to assist e
 ## 5. Development & Branching Policy
 
 This repository strictly enforces **Ticket-Driven Feature Branching (GitHub Flow)**:
-* `main` branch is protected.
-* All work must be conducted on branches named `feature/SCRUM-<ID>-<description>`.
-* Changes require peer review and a merged Pull Request before moving Jira tickets to `Done`.
+* `main` branch is protected and contains reviewed, production-ready code.
+* All feature development occurs on branches prefixed with the Jira ticket key:
+  ```bash
+  feature/SCRUM-<ID>-<short-description>
+  ```
+* Every feature requires a Pull Request with peer review and verification before merging.
