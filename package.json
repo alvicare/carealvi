@@ -1,0 +1,11 @@
+{
+  "name": "carealvi",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "code/landing-page"
+  ],
+  "scripts": {
+    "build": "npm --prefix code/landing-page run build"
+  }
+}
