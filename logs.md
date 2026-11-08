@@ -101,3 +101,25 @@
   - `Consent Forms/UoW_ATP_Ethics_Application_Form_Part_A_B.pdf`
 - **Verification Status:** `PASS`
 - **Summary & Specification Audit:** Created dedicated `Consent Forms/` directory inside workspace root and relocated compliant ethics deliverables for clean team access and version control.
+
+### [2026-11-08 20:34:00 +05:30] - OFFICIAL_ORGANIZATION_REPO_SYNC
+- **Jira Ticket:** [`SCRUM-30`](https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-30) (US-01: Next.js 3D Marketing Landing Page)
+- **Responsible Member:** Amodh Gunawardana (`712020:eb146379-993f-4916-b4b6-f7003da072c8`)
+- **Artifact(s) Submitted:**
+  - Official Organization Repository: [GitHub alvicare/carealvi](https://github.com/alvicare/carealvi)
+  - Feature Branch: `feature/SCRUM-30-landing-page-3d`
+  - Pull Request: [GitHub alvicare/carealvi PR #1](https://github.com/alvicare/carealvi/pull/1)
+  - Target Path: `code/landing-page/`
+  - Commits (10 total):
+    1. `9466c6f` - `SCRUM-30: Initialize Next.js 14 project manifest, dependencies and build scripts`
+    2. `306f3f2` - `SCRUM-30: Configure TypeScript, PostCSS and Tailwind CSS design tokens`
+    3. `70a7160` - `SCRUM-30: Add Blender 3D robot model, GLTF/GLB assets and procedural mesh generator`
+    4. `a201cdd` - `SCRUM-30: Add marketing demonstration videos and concept render assets`
+    5. `323f2d9` - `SCRUM-30: Add public WebP animation frames, dispenser sequences and optimized media`
+    6. `6105964` - `SCRUM-30: Set up Next.js App Router root layout, metadata and typography`
+    7. `a2d152e` - `SCRUM-30: Implement interactive 3D robot canvas and scroll scrubbing controllers`
+    8. `9d25ed2` - `SCRUM-30: Implement pill dispenser scroll section, watch layer and ecosystem showcase`
+    9. `cdf72a2` - `SCRUM-30: Add video scrubber preloader scripts, frame converters and sound synthesizers`
+    10. `0c06202` - `SCRUM-30: Add landing page design specification documentation and responsive guide`
+- **Verification Status:** `PASS`
+- **Summary & Specification Audit:** Successfully aligned git remote to official organization repository (`alvicare/carealvi`), pushed `main` base governance, pushed `feature/SCRUM-30-landing-page-3d`, and opened Pull Request #1 with 10 granular commits.
