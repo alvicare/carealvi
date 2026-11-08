@@ -44,7 +44,9 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Internal workflow & notes
+# Internal workflow, ethics & specs (stored locally and tracked in Jira)
 AGENTS.md
 logs.md
 mcp_jira_guide.md
+Consent Forms/
+specs/

@@ -44,8 +44,6 @@ ALVI is an autonomous, in-home robotic caregiving companion designed to assist e
 
 ```text
 ├── README.md               # Project architecture and team documentation
-├── Consent Forms/          # Approved research ethics and participant consent documents
-├── specs/                  # Coursework rubrics, MVP build specifications, and templates
 └── code/
     ├── landing-page/       # Next.js 14 marketing landing page with interactive 3D robot
     ├── caregiver-app/      # (Sprint 2) React caregiver dashboard & telemetry client
