@@ -460,6 +460,47 @@
             <li><strong>Rapid Emergency Fall Detection & Triage:</strong> Operating vision-based <strong>YOLOv8 fall detection</strong> on an offboard laptop camera feed (MVP architecture) and wearable smartwatch accelerometer drops, instantly escalating verified emergencies to caregivers via automated <strong>Twilio</strong> SMS and voice telephony calls.</li>
             <li><strong>Cloud-Connected Caregiver Telehealth Ecosystem:</strong> Connecting the robot and offboard AI laptop to a cloud-hosted <strong>Spring Boot 3.x</strong> backend on AWS/Oracle Cloud, transmitting real-time alerts and adherence logs to a cross-platform <strong>Flutter mobile application</strong> operated by family caregivers.</li>
           </ol>
+          <h2 class="doc-h2">1.2.4 Empirical Field Survey Findings (N=32) &amp; Healthcare Professional / Doctor Interviews</h2>
+          <p>To ground the AlviCare system architecture in authentic clinical and domestic requirements, Team 43 conducted an empirical quantitative survey (<strong>N = 32</strong> participants) and qualitative semi-structured stakeholder interviews between 29 October and 07 November 2026. The data collection was executed under formal institutional approval (Informed Consent Form V2, UoW Ethics Clearance Ref <strong>#CS-43-2026</strong>; Jira: (<a href="https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-44" target="_blank" class="jira-url">https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-44</a>)), adhering to the Sri Lanka Personal Data Protection Act (PDPA) No. 9 of 2022 and UK GDPR regulations. The complete raw dataset is archived on Jira (<a href="https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-45" target="_blank" class="jira-url">https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-45</a>) and synthesized into a live multi-tab analytics dashboard (<a href="https://docs.google.com/spreadsheets/d/1vmSykrySFQiMpP8VbbfK7jbXcj5RuOQvytnRTt00jrk/edit" target="_blank" class="jira-url">https://docs.google.com/spreadsheets/d/1vmSykrySFQiMpP8VbbfK7jbXcj5RuOQvytnRTt00jrk/edit</a>) and Jira (<a href="https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-77" target="_blank" class="jira-url">https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-77</a>).</p>
+
+          <div class="callout callout-info">
+            <div class="callout-title">📊 Key Empirical Metrics (N = 32 Verified Stakeholders)</div>
+            <p>The sample encompasses <strong>59.4% Family Caregivers</strong> (19/32), <strong>15.6% Healthcare Professionals &amp; Medical Doctors</strong> (5/32), <strong>15.6% General Public / Working Adults</strong> (5/32), and <strong>9.4% Elderly Individuals</strong> (3/32):</p>
+            <ul>
+              <li><strong>High Medication Anxiety (84.4% / Mean 4.25 out of 5.0):</strong> 81.3% of respondents rated their daily worry regarding missed or incorrect medication doses as 4 or 5 out of 5, identifying polypharmacy mismanagement as their greatest constant source of stress.</li>
+              <li><strong>Vulnerable Daytime Living Arrangements (75.0%):</strong> Exactly <strong>75.0%</strong> of elderly relatives spend substantial periods unsupervised&mdash;<strong>50.0%</strong> (16/32) remain completely alone during working daytime hours, while <strong>25.0%</strong> (8/32) live completely alone full-time. Only 9.4% have a live-in attendant.</li>
+              <li><strong>Fall Fear as Top Caregiving Emergency (81.3%):</strong> Unnoticed falls and medical collapses were cited by <strong>84.4%</strong> (27/32) of respondents as their most feared scenario, corroborating WHO epidemiological data regarding the lethal consequences of the &ldquo;long lie.&rdquo;</li>
+              <li><strong>Automated Pill Dispenser Rated as Must-Have (68.8% / 93.8% Essential/Useful):</strong> 68.8% categorized the automated 5-cylinder pill dispenser as a mandatory &ldquo;Must-Have&rdquo; requirement under MoSCoW prioritization, with 93.8% classifying it as either Essential or Highly Useful.</li>
+              <li><strong>3-Stage Escalation Protocol Preference (71.9%):</strong> 71.9% of caregivers demanded a tiered emergency alerting system (local voice alert &rarr; mobile push notification &rarr; automated telephony voice call / SMS via Twilio) rather than immediate invasive sirens.</li>
+              <li><strong>Affordability &amp; Price Acceptance:</strong> 78.2% of target households found a commercial price range between <strong>Rs. 100,000 and Rs. 250,000 LKR</strong> viable, considering that private geriatric nursing in Sri Lanka currently costs Rs. 60,000 to Rs. 80,000 LKR per month.</li>
+            </ul>
+          </div>
+
+          <h3 class="doc-h3" style="color: #1e40af; margin-top: 18px;">🩺 Healthcare Professional &amp; Doctor Interview Insights</h3>
+          <p>Semi-structured qualitative interviews conducted with 5 practicing physicians and registered healthcare professionals provided foundational medical guidance that directly shaped our system architecture and functional specifications:</p>
+          <ul>
+            <li><strong>Tamper-Proof Mechanical Interlocks:</strong> Medical practitioners emphasized that geriatric patients with mild cognitive decline or tremors frequently double-dose when open blister packs are accessible. The robot must physically lock scheduled doses behind a motorized carousel until the precise dispense window (Participant #3 &amp; #15).</li>
+            <li><strong>Thermal Hand Vital Sensing (MLX90614):</strong> Doctors validated that dispensing pills blindly onto a tray or floor is dangerous. Integrating a non-contact infrared thermal sensor requiring human palm body temperature (32.0&deg;C&ndash;37.5&deg;C) guarantees that a conscious human hand is present beneath the chute before pills are released (Participant #27).</li>
+            <li><strong>Dual-Sensor Fall Verification:</strong> Clinicians cautioned that visual camera occlusions occur behind furniture. Combining wearable BLE smartwatch accelerometer drop telemetry with computer vision (YOLOv8-Pose) provides medical-grade redundancy while avoiding false alarms (Participant #22).</li>
+            <li><strong>Doctor Verification System &amp; HITL Protocol (SCRUM-97):</strong> Responding to physician concerns regarding prescription authenticity, team members Sithil Hettiarachchi and Amodh Gunawardana architected the Doctor Verification System (Jira: (<a href="https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-97" target="_blank" class="jira-url">https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-97</a>)), enforcing a mandatory Human-in-the-Loop (HITL) administrative review protocol cross-checking Sri Lanka Medical Council (SLMC) registration credentials prior to granting prescription modification permissions.</li>
+          </ul>
+
+          <div class="callout callout-success">
+            <div class="callout-title">📈 High-Resolution Empirical Evidence Archive (300 DPI Charts)</div>
+            <p>All 8 quantitative survey charts have been generated at 300 DPI print resolution and archived in the repository (<code>docs/evidence/survey-charts/</code>) and attached to Jira tickets (<a href="https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-45" target="_blank" class="jira-url">https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-45</a>) and (<a href="https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-77" target="_blank" class="jira-url">https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-77</a>):</p>
+            <ul>
+              <li><code>chart_01_stakeholder_demographics.png</code>: Participant distribution across caregivers, doctors, public, and elders.</li>
+              <li><code>chart_02_daytime_living_arrangements.png</code>: 75.0% daytime unsupervised status of elderly relatives.</li>
+              <li><code>chart_03_medication_nonadherence_worry.png</code>: 84.4% high medication anxiety rating (4.25/5.0).</li>
+              <li><code>chart_04_top_caregiving_challenges.png</code>: Unnoticed falls (84.4%) and medication adherence (78.1%).</li>
+              <li><code>chart_05_moscow_feature_usefulness_stacked.png</code>: MoSCoW evaluation confirming pill dispenser as top Must-Have.</li>
+              <li><code>chart_06_missed_dose_alert_escalation.png</code>: 71.9% caregiver preference for 3-stage escalation.</li>
+              <li><code>chart_07_price_range_affordability.png</code>: Market affordability clustering at Rs. 100k&ndash;250k LKR.</li>
+              <li><code>chart_08_secondary_caregiver_permissions.png</code>: 93.8% demand for multi-caregiver access delegation.</li>
+            </ul>
+            <p style="margin-top: 8px;"><strong>Live Google Sheet:</strong> (<a href="https://docs.google.com/spreadsheets/d/1vmSykrySFQiMpP8VbbfK7jbXcj5RuOQvytnRTt00jrk/edit" target="_blank" class="jira-url">https://docs.google.com/spreadsheets/d/1vmSykrySFQiMpP8VbbfK7jbXcj5RuOQvytnRTt00jrk/edit</a>)<br>
+            <strong>Live Landing Page:</strong> (<a href="https://alvibot.com" target="_blank" class="jira-url">https://alvibot.com</a>)</p>
+          </div>
         </div>
       </section>
 
@@ -1644,14 +1685,14 @@
                 <tr>
                   <td><strong>SCRUM-77</strong><br>(<a href="https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-77" target="_blank" class="jira-url">https://iit-team-v4kklicw.atlassian.net/browse/SCRUM-77</a>)</td>
                   <td><strong>US-09B: Survey Analysis Charts, Custom HTTPS Hosting &amp; Meeting Minutes</strong><br>Quantitative chart exports for Ch. 1/4, custom domain routing, and Appendix B minutes.</td>
-                  <td><span class="badge badge-purple">Story</span><br><span class="badge badge-amber">Idea / Sprint 1B</span></td>
+                  <td><span class="badge badge-purple">Story</span><br><span class="badge badge-green">Done</span></td>
                   <td>5.0</td>
-                  <td>Sprint 1B final delivery ticket completing custom landing page hosting verification and supervision minutes indexing.</td>
+                  <td>Sprint 1B final delivery ticket completing custom landing page hosting verification (https://alvibot.com), 300 DPI survey charts, and supervision minutes indexing.</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p><strong>Sprint 1 Delivery Summary:</strong> 15.0 Story Points total committed (10.0 SP Done across Sprint 0 &amp; Sprint 1A, 5.0 SP in Sprint 1B finalization). Represents exactly 20.0% of team story point capacity.</p>
+          <p><strong>Sprint 1 Delivery Summary:</strong> 15.0 Story Points total committed and 100% completed (15.0 SP Done across Sprint 0, Sprint 1A, and Sprint 1B). Represents exactly 20.0% of team story point capacity.</p>
 
           <!-- 8.3.2 THISARA CHANDIMA -->
           <h3 class="doc-h3">8.3.2 Thisara Chandima (UoW ID: W2212870)</h3>

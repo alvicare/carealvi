@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680" width="1100" height="680">
+      <rect width="1100" height="680" fill="#ffffff" rx="16" stroke="#e2e8f0" stroke-width="2"/>
+      <rect x="40" y="35" width="6" height="50" rx="3" fill="#e11d48"/>
+      <text x="60" y="58" font-family="system-ui, sans-serif" font-size="26" font-weight="800" fill="#0f172a">Figure 1.2: Daytime Living Arrangements of Elderly Relatives</text>
+      <text x="60" y="85" font-family="system-ui, sans-serif" font-size="16" font-weight="500" fill="#64748b">Vulnerability Assessment during Working Hours • Sample Size N = 32 • Ethics Ref: #CS-43-2026</text>
+      <line x1="60" y1="108" x2="1040" y2="108" stroke="#e2e8f0" stroke-width="1.5"/>
+      
+        <text x="70" y="140" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#1e293b">Alone during workday while family is at work</text>
+        <rect x="70" y="154" width="750" height="38" rx="8" fill="#f1f5f9"/>
+        <rect x="70" y="154" width="425" height="38" rx="8" fill="#e11d48"/>
+        <text x="513" y="180" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#e11d48">16 (50.0%)</text>
+        
+        <text x="70" y="250" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#1e293b">Lives completely alone in residence</text>
+        <rect x="70" y="264" width="750" height="38" rx="8" fill="#f1f5f9"/>
+        <rect x="70" y="264" width="212" height="38" rx="8" fill="#ea580c"/>
+        <text x="300" y="290" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#ea580c">8 (25.0%)</text>
+        
+        <text x="70" y="360" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#1e293b">Lives with family / full-time home nurse</text>
+        <rect x="70" y="374" width="750" height="38" rx="8" fill="#f1f5f9"/>
+        <rect x="70" y="374" width="79" height="38" rx="8" fill="#10b981"/>
+        <text x="167" y="400" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#10b981">3 (9.4%)</text>
+        
+        <text x="70" y="470" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#1e293b">Not applicable / Independent living</text>
+        <rect x="70" y="484" width="750" height="38" rx="8" fill="#f1f5f9"/>
+        <rect x="70" y="484" width="132" height="38" rx="8" fill="#64748b"/>
+        <text x="220" y="510" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#64748b">5 (15.6%)</text>
+        
+      <rect x="60" y="580" width="980" height="60" rx="10" fill="#fff1f2" stroke="#fecdd3"/>
+      <text x="80" y="616" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#9f1239">CRITICAL METRIC: 75.0% (24/32) of elderly subjects remain unsupervised for 8–10 hours daily, driving emergency robotics need.</text>
+    </svg>

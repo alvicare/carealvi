@@ -88,7 +88,7 @@ export const ALVICARE_FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: "Architecture",
     links: [
-      { label: "Autonomous SLAM", href: "#engineering" },
+      { label: "ToF Laser Navigation", href: "#engineering" },
       { label: "Vital Telemetry", href: "#ecosystem" },
       { label: "PDPA & HIPAA Compliance", href: "#specs" },
       { label: "Offline Mesh Protocol", href: "#specs" },

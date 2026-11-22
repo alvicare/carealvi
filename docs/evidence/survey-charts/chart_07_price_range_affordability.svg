@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680" width="1100" height="680">
+      <rect width="1100" height="680" fill="#ffffff" rx="16" stroke="#e2e8f0" stroke-width="2"/>
+      <rect x="40" y="35" width="6" height="50" rx="3" fill="#059669"/>
+      <text x="60" y="58" font-family="system-ui, sans-serif" font-size="26" font-weight="800" fill="#0f172a">Figure 1.5: Reasonable One-Time Price Expectation in Sri Lanka</text>
+      <text x="60" y="85" font-family="system-ui, sans-serif" font-size="16" font-weight="500" fill="#64748b">Commercial Feasibility vs. Rs. 80,000/mo Private Nursing Cost • N = 32 • Ethics Ref: #CS-43-2026</text>
+      <line x1="60" y1="108" x2="1040" y2="108" stroke="#e2e8f0" stroke-width="1.5"/>
+      
+        <text x="70" y="140" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#1e293b">Rs. 100,000 – Rs. 150,000 (Sweet Spot Target)</text>
+        <rect x="70" y="154" width="750" height="38" rx="8" fill="#f1f5f9"/>
+        <rect x="70" y="154" width="398" height="38" rx="8" fill="#059669"/>
+        <text x="486" y="180" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#059669">15 (46.9%)</text>
+        
+        <text x="70" y="250" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#1e293b">Rs. 150,000 – Rs. 250,000 (Upper Middle Tier)</text>
+        <rect x="70" y="264" width="750" height="38" rx="8" fill="#f1f5f9"/>
+        <rect x="70" y="264" width="265" height="38" rx="8" fill="#2563eb"/>
+        <text x="353" y="290" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#2563eb">10 (31.2%)</text>
+        
+        <text x="70" y="360" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#1e293b">Below Rs. 100,000 (Budget Enclave)</text>
+        <rect x="70" y="374" width="750" height="38" rx="8" fill="#f1f5f9"/>
+        <rect x="70" y="374" width="132" height="38" rx="8" fill="#0d9488"/>
+        <text x="220" y="400" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#0d9488">5 (15.6%)</text>
+        
+        <text x="70" y="470" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#1e293b">Above Rs. 250,000 (Premium Luxury)</text>
+        <rect x="70" y="484" width="750" height="38" rx="8" fill="#f1f5f9"/>
+        <rect x="70" y="484" width="52" height="38" rx="8" fill="#64748b"/>
+        <text x="140" y="510" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#64748b">2 (6.2%)</text>
+        
+      <rect x="60" y="580" width="980" height="60" rx="10" fill="#f0fdf4" stroke="#bbf7d0"/>
+      <text x="80" y="616" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#15803d">ECONOMIC FEASIBILITY: 78.1% of families consider Rs. 100k–250k justifiable, matching our Rs. 110,950 BOM.</text>
+    </svg>
