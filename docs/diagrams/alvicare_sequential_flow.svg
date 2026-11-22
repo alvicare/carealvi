@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 800" width="1100" height="800" style="background:#ffffff; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <marker id="seqArrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L7,3 z" fill="#2563eb" />
+    </marker>
+    <marker id="seqArrowGreen" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L7,3 z" fill="#059669" />
+    </marker>
+    <marker id="seqArrowAmber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L7,3 z" fill="#d97706" />
+    </marker>
+  </defs>
+
+  <rect x="30" y="20" width="1040" height="60" rx="10" fill="#1e293b" />
+  <text x="550" y="55" fill="#ffffff" font-size="18" font-weight="700" text-anchor="middle">ALVICARE — STRICT SEQUENTIAL COMMUNICATION &amp; DATA FLOW SEQUENCE</text>
+
+  <!-- Lifelines -->
+  <!-- Col 1: Robot Tier 1+2 -->
+  <rect x="60" y="110" width="160" height="44" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" />
+  <text x="140" y="137" fill="#1e40af" font-size="12" font-weight="700" text-anchor="middle">Robot (Tiers 1 &amp; 2)</text>
+  <line x1="140" y1="154" x2="140" y2="750" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4" />
+
+  <!-- Col 2: Local Wi-Fi Router -->
+  <rect x="280" y="110" width="160" height="44" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+  <text x="360" y="137" fill="#92400e" font-size="12" font-weight="700" text-anchor="middle">Local Wi-Fi Router</text>
+  <line x1="360" y1="154" x2="360" y2="750" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4" />
+
+  <!-- Col 3: AI Brain Laptop -->
+  <rect x="500" y="110" width="160" height="44" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1.5" />
+  <text x="580" y="137" fill="#065f46" font-size="12" font-weight="700" text-anchor="middle">AI Brain Laptop (T3)</text>
+  <line x1="580" y1="154" x2="580" y2="750" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4" />
+
+  <!-- Col 4: Spring Boot Backend -->
+  <rect x="720" y="110" width="160" height="44" rx="6" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5" />
+  <text x="800" y="137" fill="#0369a1" font-size="12" font-weight="700" text-anchor="middle">Spring Boot Cloud (T4)</text>
+  <line x1="800" y1="154" x2="800" y2="750" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4" />
+
+  <!-- Col 5: Flutter Mobile App -->
+  <rect x="920" y="110" width="140" height="44" rx="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="1.5" />
+  <text x="990" y="137" fill="#6b21a8" font-size="12" font-weight="700" text-anchor="middle">Flutter App (Caregiver)</text>
+  <line x1="990" y1="154" x2="990" y2="750" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4" />
+
+  <!-- Step 1: Schedule Sync -->
+  <line x1="580" y1="190" x2="800" y2="190" stroke="#059669" stroke-width="2" marker-end="url(#seqArrowGreen)" />
+  <text x="690" y="182" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">1. GET /api/v1/schedules/{patientId}</text>
+
+  <line x1="800" y1="220" x2="580" y2="220" stroke="#059669" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#seqArrowGreen)" />
+  <text x="690" y="212" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">200 OK (Medication Times, Dosages, Cartridge IDs)</text>
+
+  <!-- Step 2: Wireless sync to robot -->
+  <line x1="580" y1="260" x2="360" y2="260" stroke="#d97706" stroke-width="2" marker-end="url(#seqArrowAmber)" />
+  <line x1="360" y1="260" x2="140" y2="260" stroke="#d97706" stroke-width="2" marker-end="url(#seqArrowAmber)" />
+  <text x="250" y="252" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">2. Arm Dispense Schedule (Local Wi-Fi)</text>
+
+  <!-- Step 3: Dispense event on robot -->
+  <rect x="70" y="290" width="140" height="55" rx="5" fill="#eff6ff" stroke="#3b82f6" stroke-width="1" />
+  <text x="140" y="310" fill="#1e40af" font-size="9" font-weight="700" text-anchor="middle">Hand Thermal Temp Verified</text>
+  <text x="140" y="324" fill="#475569" font-size="9" text-anchor="middle">(32°C–37.5°C) + IR Drop Count</text>
+  <text x="140" y="338" fill="#16a34a" font-size="9" font-weight="700" text-anchor="middle">Dose Released</text>
+
+  <!-- Step 4: Report to Laptop -->
+  <line x1="140" y1="370" x2="360" y2="370" stroke="#d97706" stroke-width="2" marker-end="url(#seqArrowAmber)" />
+  <line x1="360" y1="370" x2="580" y2="370" stroke="#d97706" stroke-width="2" marker-end="url(#seqArrowAmber)" />
+  <text x="360" y="362" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">3. Dispense Telemetry + Cartridge Level (Local Wi-Fi)</text>
+
+  <!-- Step 5: Laptop to Cloud -->
+  <line x1="580" y1="410" x2="800" y2="410" stroke="#059669" stroke-width="2" marker-end="url(#seqArrowGreen)" />
+  <text x="690" y="402" fill="#065f46" font-size="10" font-weight="600" text-anchor="middle">4. POST /api/v1/dispense/confirm</text>
+
+  <!-- Step 6: Low inventory alert -->
+  <line x1="580" y1="450" x2="800" y2="450" stroke="#dc2626" stroke-width="2" marker-end="url(#seqArrowGreen)" />
+  <text x="690" y="442" fill="#b91c1c" font-size="10" font-weight="600" text-anchor="middle">5. POST /api/v1/dispense/restock-alert (Low Pills)</text>
+
+  <!-- Step 7: Push alert to Mobile -->
+  <line x1="800" y1="490" x2="990" y2="490" stroke="#0284c7" stroke-width="2" marker-end="url(#seqArrow)" />
+  <text x="895" y="482" fill="#0369a1" font-size="10" font-weight="600" text-anchor="middle">6. FCM Push: &quot;Refill Chamber 3&quot;</text>
+
+  <!-- Step 8: Fall Incident Detection -->
+  <line x1="140" y1="540" x2="580" y2="540" stroke="#dc2626" stroke-width="2" marker-end="url(#seqArrowAmber)" />
+  <text x="360" y="532" fill="#b91c1c" font-size="10" font-weight="700" text-anchor="middle">7. Fall G-Spike (&gt;2.5g) + Video Stream via Wi-Fi</text>
+
+  <rect x="510" y="560" width="140" height="45" rx="5" fill="#fef2f2" stroke="#ef4444" stroke-width="1" />
+  <text x="580" y="578" fill="#991b1b" font-size="9" font-weight="700" text-anchor="middle">YOLOv8 Vision Confirms</text>
+  <text x="580" y="594" fill="#b91c1c" font-size="9" text-anchor="middle">Horizontal Posture (&gt;5s)</text>
+
+  <line x1="580" y1="630" x2="800" y2="630" stroke="#dc2626" stroke-width="2.5" marker-end="url(#seqArrowGreen)" />
+  <text x="690" y="622" fill="#b91c1c" font-size="10" font-weight="700" text-anchor="middle">8. POST /api/v1/alerts/fall (Emergency Trigger)</text>
+
+  <line x1="800" y1="670" x2="990" y2="670" stroke="#dc2626" stroke-width="2.5" marker-end="url(#seqArrow)" />
+  <text x="895" y="662" fill="#b91c1c" font-size="10" font-weight="700" text-anchor="middle">9. High-Priority Push + Twilio Call</text>
+
+  <!-- Isolation Banner -->
+  <rect x="60" y="710" width="980" height="35" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1" />
+  <text x="550" y="732" fill="#334155" font-size="11" font-weight="600" text-anchor="middle">Architectural Isolation Guarantee: Robot never communicates directly with Cloud or Mobile App. All edge traffic routes through dedicated Wi-Fi and Laptop AI Brain.</text>
+</svg>

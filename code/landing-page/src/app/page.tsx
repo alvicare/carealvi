@@ -16,6 +16,7 @@ import { PreorderBannerSection } from "@/components/PreorderBannerSection";
 import { WaitlistModal } from "@/components/WaitlistModal";
 import { Footer } from "@/components/Footer";
 import { WelcomeAudio } from "@/components/WelcomeAudio";
+import { Preloader } from "@/components/Preloader";
 
 export default function HomePage() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
@@ -37,6 +38,9 @@ export default function HomePage() {
 
   return (
     <main className="relative w-full min-h-screen bg-white text-primary">
+      {/* 0. Cinematic SaaS Telemetry Preloader */}
+      <Preloader />
+
       {/* 1. Top Fixed Navigation */}
       <Navigation
         onOpenWaitlist={() => setIsWaitlistOpen(true)}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlviCare Logo Assets — Vector &amp; Stacked</title>
+  <style>
+    :root {
+      --bg: #F4F5F2;
+      --card-bg: #EEEFEC;
+      --ink: #1E2023;
+      --muted: #64748B;
+      --teal: #0F766E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      padding: 40px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+      max-width: 600px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1040px;
+      width: 100%;
+    }
+    .card {
+      background: #FFFFFF;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,0.08);
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+    }
+    .preview-box {
+      height: 260px;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .preview-box.canvas-bg {
+      background: #EEEFEC;
+    }
+    .preview-box.checker {
+      background-color: #FAFAFA;
+      background-image: 
+        linear-gradient(45deg, #F0F0F0 25%, transparent 25%),
+        linear-gradient(-45deg, #F0F0F0 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #F0F0F0 75%),
+        linear-gradient(-45deg, transparent 75%, #F0F0F0 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    }
+    .preview-box.dark-bg {
+      background: #111827;
+    }
+    .card-info {
+      padding: 16px 20px 20px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .card-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 8px;
+      background: #F1F5F9;
+      color: var(--ink);
+      border: 1px solid #E2E8F0;
+      transition: all 0.15s ease;
+    }
+    .btn:hover {
+      background: var(--teal);
+      color: #FFFFFF;
+      border-color: var(--teal);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>AlviCare Logo Suite</h1>
+    <p>Exact vector assets matching the app design system and welcome screen lockup. Pure scalable SVG with embedded outlines (no external fonts required).</p>
+  </header>
+
+  <div class="grid">
+    <!-- 1. Screenshot Match: Light Canvas BG -->
+    <div class="card">
+      <div class="preview-box canvas-bg">
+        <img src="alvicare-logo-light-bg.svg" width="240" height="208" alt="AlviCare Logo Canvas">
+      </div>
+      <div class="card-info">
+        <span class="card-title">1. Exact Screenshot Match</span>
+        <span class="card-desc">With signature #EEEFEC canvas background and soft drop shadow.</span>
+        <div class="card-actions">
+          <a class="btn" href="alvicare-logo-light-bg.svg" download>Download SVG</a>
+          <a class="btn" href="alvicare-logo-preview.png" download>Download PNG</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Transparent Background Stacked Logo -->
+    <div class="card">
+      <div class="preview-box checker">
+        <img src="alvicare-logo.svg" width="240" height="208" alt="AlviCare Logo Transparent">
+      </div>
+      <div class="card-info">
+        <span class="card-title">2. Stacked Logo (Transparent)</span>
+        <span class="card-desc">Standard production SVG for light backgrounds, slides, and docs.</span>
+        <div class="card-actions">
+          <a class="btn" href="alvicare-logo.svg" download>Download SVG</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Dark Mode Stacked Logo -->
+    <div class="card">
+      <div class="preview-box dark-bg">
+        <img src="alvicare-logo-dark.svg" width="240" height="208" alt="AlviCare Logo Dark Mode">
+      </div>
+      <div class="card-info">
+        <span class="card-title">3. Stacked Logo (Dark Mode)</span>
+        <span class="card-desc">White wordmark text with illuminated teal robotic arm for dark themes.</span>
+        <div class="card-actions">
+          <a class="btn" href="alvicare-logo-dark.svg" download>Download SVG</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Standalone Squircle App Icon -->
+    <div class="card">
+      <div class="preview-box canvas-bg">
+        <img src="alvicare-app-icon.svg" width="130" height="130" alt="AlviCare App Icon">
+      </div>
+      <div class="card-info">
+        <span class="card-title">4. Standalone App Icon</span>
+        <span class="card-desc">512×512 squircle tile for Android, iOS, or web favicons.</span>
+        <div class="card-actions">
+          <a class="btn" href="alvicare-app-icon.svg" download>Download SVG</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

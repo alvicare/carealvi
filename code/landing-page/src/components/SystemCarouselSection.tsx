@@ -63,7 +63,7 @@ export function SystemCarouselSection() {
     },
     {
       id: "card-5",
-      title: "Master Bedroom & 2D LiDAR SLAM",
+      title: "Master Bedroom & Solid-State ToF Navigation",
       location: "Quiet Living Space",
       imageSrc: "/images/perspective_beauty.png",
     },
@@ -197,8 +197,8 @@ export function SystemCarouselSection() {
             </h3>
             <p className="text-[14px] text-[#6E6E73] leading-[1.6]">
               No complex routines, no missed schedules. ALVI navigates from room to
-              room via 2D LiDAR and verifies every dose in three steps using PIR
-              hand sensing, IR break-beam counting, and MediaPipe vision.
+              room via 4x solid-state ToF laser rangefinders and verifies every dose via
+              contactless MLX90614 palm thermopile sensing and IR break-beam verification.
             </p>
           </div>
 

@@ -16,10 +16,10 @@ export function TechSpecsSection() {
     {
       category: "AUTONOMOUS NAVIGATION",
       items: [
-        { label: "Spatial Mapping", value: "2D 360° LiDAR (12m range, 0.05m accuracy) + ROS 2 SLAM" },
-        { label: "Vision", value: "1080p 30fps Spatial Camera + Dual Optical Drop Sensors" },
-        { label: "Obstacle Avoidance", value: "Tri-directional Sonar + Mechanical Front Bump Bumper" },
-        { label: "Mobility", value: "High-torque BTS7960 Dual Crawler Drive (Overcomes 20mm doorsills)" },
+        { label: "Spatial Sensing", value: "4x Solid-State Time-of-Flight (VL53L1X) Array + 30mm Cliff Drop Sensor" },
+        { label: "Vision", value: "1080p 30fps Spatial Camera + Ephemeral YOLOv8 Pose Estimation" },
+        { label: "Safe Speed", value: "Nominal Cruising at 0.3 m/s (Capped at 0.5 m/s Max Safety Ceiling)" },
+        { label: "Mobility", value: "2WD Differential Geared Motors + BTS7960 43A Driver & 500ms Watchdog Braking" },
       ],
     },
     {
@@ -27,7 +27,7 @@ export function TechSpecsSection() {
       items: [
         { label: "Carousel Capacity", value: "5-Cylinder Hermetic Moisture-Proof Canisters" },
         { label: "Pill Compatibility", value: "Standard tablets & capsules (0.2mg to 500mg)" },
-        { label: "Verification Engine", value: "PIR Hand Presence + IR Break-Beam + MediaPipe 1.5s Vision" },
+        { label: "Verification Engine", value: "MLX90614 Contactless Palm Thermopile (32–37.5°C) + IR Break-Beam Sensor" },
         { label: "Hydration Caddy", value: "750ml Food-Grade BPA-Free Tritan Bottle with Spring Lock" },
       ],
     },

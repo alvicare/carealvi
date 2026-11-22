@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 277 241" width="277" height="241">
+  <title>AlviCare Logo</title>
+  <defs>
+    <!-- Linear Gradient for App Icon Tile (145deg teal) -->
+    <linearGradient id="alviTileGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F766E"/>
+      <stop offset="100%" stop-color="#0B4F4A"/>
+    </linearGradient>
+
+    <!-- App Icon Drop Shadow -->
+    <filter id="tileDropShadow" x="-25%" y="-20%" width="150%" height="160%">
+      <feDropShadow dx="0" dy="7" stdDeviation="8" flood-color="#072B28" flood-opacity="0.40"/>
+    </filter>
+
+    <!-- White Robotic Arm V + Orange Heart for App Icon Tile -->
+    <g id="symbolMarkWhite">
+      <path d="M12 22 L30 50 L50 14" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M50 8 C48.5 3.5 41 5 42.5 11 C44 15.5 50 18.5 50 20 C50 18.5 56 15.5 57.5 11 C59 5 51.5 3.5 50 8 Z" fill="#F59E5B"/>
+    </g>
+
+    <!-- Wordmark Glyphs (Letters "Al" and "iCare") -->
+    <path id="lettersPath" d="M24 0 312 -700H392L678 0H554L330 -567H372L146 0ZM166 -135V-235H537V-135Z M743 0V-720H853V0Z M1696 0V-480H1806V0ZM1751 -568Q1723 -568 1704.5 -587Q1686 -606 1686 -634Q1686 -662 1704.5 -681Q1723 -700 1751 -700Q1780 -700 1798 -681Q1816 -662 1816 -634Q1816 -606 1798 -587Q1780 -568 1751 -568Z M2242 10Q2166 10 2101.5 -17.5Q2037 -45 1989 -94.5Q1941 -144 1915 -209.5Q1889 -275 1889 -350Q1889 -425 1915 -490.5Q1941 -556 1989 -605Q2037 -654 2101.5 -682Q2166 -710 2242 -710Q2327 -710 2389 -682Q2451 -654 2499 -606L2421 -528Q2390 -562 2345.5 -581Q2301 -600 2242 -600Q2190 -600 2147 -582Q2104 -564 2072.5 -530.5Q2041 -497 2024 -451Q2007 -405 2007 -350Q2007 -295 2024 -249Q2041 -203 2072.5 -169.5Q2104 -136 2147 -118Q2190 -100 2242 -100Q2306 -100 2350.5 -119.5Q2395 -139 2426 -173L2504 -95Q2456 -46 2391 -18Q2326 10 2242 10Z M2773 10Q2708 10 2655.5 -23Q2603 -56 2572.5 -112.5Q2542 -169 2542 -239Q2542 -310 2572.5 -366.5Q2603 -423 2655.5 -456.5Q2708 -490 2773 -490Q2828 -490 2870.5 -466.5Q2913 -443 2938 -402Q2963 -361 2963 -309V-171Q2963 -119 2938.5 -78Q2914 -37 2871 -13.5Q2828 10 2773 10ZM2791 -94Q2852 -94 2889.5 -135Q2927 -176 2927 -240Q2927 -283 2910 -316Q2893 -349 2862.5 -367.5Q2832 -386 2791 -386Q2751 -386 2720.5 -367.5Q2690 -349 2672.5 -316Q2655 -283 2655 -240Q2655 -197 2672.5 -164Q2690 -131 2720.5 -112.5Q2751 -94 2791 -94ZM2920 0V-129L2939 -246L2920 -362V-480H3030V0Z M3132 0V-480H3242V0ZM3242 -267 3204 -286Q3204 -377 3244.5 -433.5Q3285 -490 3367 -490Q3403 -490 3432 -477Q3461 -464 3486 -435L3414 -361Q3401 -375 3385 -381Q3369 -387 3348 -387Q3302 -387 3272 -358Q3242 -329 3242 -267Z M3760 10Q3688 10 3630.5 -22.5Q3573 -55 3539.5 -112Q3506 -169 3506 -240Q3506 -311 3539 -367.5Q3572 -424 3628.5 -457Q3685 -490 3754 -490Q3821 -490 3872.5 -459Q3924 -428 3953.5 -374Q3983 -320 3983 -251Q3983 -239 3981.5 -226.5Q3980 -214 3977 -199H3583V-289H3920L3879 -253Q3877 -297 3862 -327Q3847 -357 3819.5 -373Q3792 -389 3752 -389Q3710 -389 3679 -371Q3648 -353 3631 -320.5Q3614 -288 3614 -243Q3614 -198 3632 -164Q3650 -130 3683 -111.5Q3716 -93 3759 -93Q3796 -93 3827.5 -106Q3859 -119 3881 -144L3951 -73Q3916 -32 3866 -11Q3816 10 3760 10Z"/>
+
+    <!-- Wordmark Assembly -->
+    <g id="alviWordmark">
+      <use href="#lettersPath" fill="#1E2023"/>
+      <!-- Robotic Arm V inside wordmark -->
+      <g transform="translate(914.0 -480) scale(15.0000)">
+        <path d="M4.67 3.67 L20 28.33 L38 -3" fill="none" stroke="#0F766E" stroke-width="7.33" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M0 -3 C-1 -6 -6 -5 -5 -1 C-4 2 0 4 0 5 C0 4 4 2 5 -1 C6 -5 1 -6 0 -3 Z" transform="translate(40.5 -11) scale(1.5)" fill="#F59E5B"/>
+      </g>
+    </g>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#EEEFEC"/>
+  <!-- Top Squircle App Icon Tile -->
+  <g id="appIconTile">
+    <!-- Tactile bottom 3D rim -->
+    <rect x="83.5" y="41.5" width="110" height="110" rx="32.5" fill="#083B37"/>
+    <!-- Main gradient tile with shadow -->
+    <rect x="83.5" y="38.5" width="110" height="110" rx="32.5" fill="url(#alviTileGrad)" filter="url(#tileDropShadow)"/>
+    <!-- Inner top highlight -->
+    <rect x="84.5" y="39.5" width="108" height="108" rx="31.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1.5"/>
+    <!-- Inner White Symbol (centered) -->
+    <g transform="translate(104.75, 59.75) scale(1.0547)">
+      <use href="#symbolMarkWhite"/>
+    </g>
+  </g>
+
+  <!-- Bottom Centered Wordmark -->
+  <g transform="translate(31.5, 223) scale(0.0530)">
+    <use href="#alviWordmark"/>
+  </g>
+</svg>

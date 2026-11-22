@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { OrigamiLogo } from "./origami-logo";
+import { AlviCareLogo } from "./origami-logo";
 
 interface NavigationProps {
   onOpenWaitlist: () => void;
@@ -19,14 +19,15 @@ export function Navigation({
 
   return (
     <header className="fixed top-0 left-0 w-full h-[90px] z-50 flex items-center justify-between px-6 sm:px-10 md:px-14 pointer-events-none transition-all duration-300">
-      {/* LEFT: Geometric Origami Mark + Language Selector */}
+      {/* LEFT: Official AlviCare Logo + Brand Wordmark + Language Selector */}
       <div className="flex items-center gap-4 pointer-events-auto">
         <a
           href="#"
-          className="flex items-center gap-2 group transition-opacity hover:opacity-80"
+          className="flex items-center gap-2.5 group transition-opacity hover:opacity-85"
           aria-label="ALVICARE Home"
         >
-          <OrigamiLogo className="w-6 h-6 transition-transform duration-500 group-hover:scale-105" />
+          <AlviCareLogo className="w-7 h-7 rounded-lg shadow-[0_2px_8px_rgba(15,118,110,0.22)] transition-transform duration-500 group-hover:scale-105" />
+          <span className="font-semibold text-[15px] tracking-tight text-[#1D1D1F]">ALVICARE</span>
         </a>
 
         {/* Minimal Language Selector */}
@@ -98,30 +99,8 @@ export function Navigation({
         </nav>
       </div>
 
-      {/* RIGHT: Minimal Instagram Icon / Sign In / Dark Pill CTA */}
+      {/* RIGHT: Order Dark Pill CTA */}
       <div className="flex items-center gap-4 sm:gap-5 pointer-events-auto">
-        {/* Minimal Instagram Vector Icon */}
-        <a
-          href="https://instagram.com"
-          target="_blank"
-          rel="noreferrer"
-          className="text-[#6E6E73] hover:text-[#454545] transition-colors p-1"
-          aria-label="Instagram Profile"
-        >
-          <svg
-            className="w-4 h-4 stroke-current fill-none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-          </svg>
-        </a>
-
         {/* Dark Pill Button */}
         <button
           onClick={onOpenWaitlist}

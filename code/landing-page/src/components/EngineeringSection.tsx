@@ -23,11 +23,11 @@ export function EngineeringSection() {
     },
     {
       numeral: "03",
-      title: "2D 360° LiDAR & Spatial Telemetry",
+      title: "Solid-State Time-of-Flight (ToF) & Spatial Telemetry",
       category: "AUTONOMOUS NAVIGATION",
-      desc: "Rotational 360° LiDAR maps rooms with 0.05m accuracy. Integrated with stereo vision and edge ROS 2 SLAM to glide smoothly across rugs, thresholds, and living areas without ceiling markers.",
+      desc: "4x solid-state VL53L1X laser rangefinders provide rapid obstacle detection and 30mm cliff-drop protection at 0.3 m/s safe cruising speed, completely eliminating mechanical wear and domestic dust failure.",
       imageSrc: "/images/perspective_beauty.png",
-      tag: "ROS 2 SLAM · 12m Range",
+      tag: "Solid-State ToF · 30mm Cliff Drop",
     },
     {
       numeral: "04",

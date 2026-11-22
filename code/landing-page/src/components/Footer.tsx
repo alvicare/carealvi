@@ -81,7 +81,7 @@ export const ALVICARE_FOOTER_COLUMNS: FooterColumn[] = [
     links: [
       { label: "Monocoque Shell", href: "#engineering" },
       { label: "Hermetic Carousel", href: "#pill-dispensing" },
-      { label: "360° LiDAR & Vision", href: "#engineering" },
+      { label: "Solid-State ToF & Vision", href: "#engineering" },
       { label: "CareWatch BLE Sync", href: "#ecosystem" },
     ],
   },
@@ -100,7 +100,7 @@ export const ALVICARE_FOOTER_COLUMNS: FooterColumn[] = [
       { label: "Caregiver Web App", href: "#ecosystem" },
       { label: "WebRTC Telepresence", href: "#telepresence" },
       { label: "Clinical Telehealth", href: "#telepresence" },
-      { label: "hello@alvicare.com", href: "mailto:hello@alvicare.com" },
+      { label: "alvicarebot@gmail.com", href: "mailto:alvicarebot@gmail.com" },
     ],
   },
 ];
