@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://alvibot.com/</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://alvibot.com/alvicare-logo-preview.png</image:loc>
+      <image:title>ALVI One Autonomous Home-Care Companion Robot</image:title>
+      <image:caption>The world's most advanced autonomous home-care companion robot for elderly care and caregiver telemetry.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://alvibot.com/images/launch_video_poster.jpg</image:loc>
+      <image:title>ALVI One Launch Film Poster</image:title>
+      <image:caption>Team 43 ALVI One System Demonstration Poster Frame</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://alvibot.com/images/launch_video_poster.jpg</video:thumbnail_loc>
+      <video:title>ALVI One — Official Master Launch Video &amp; Cyber-Physical Demonstration</video:title>
+      <video:description>Official 41-second demonstration of the ALVI One companion robot: 5-cylinder hermetic pill dispenser, 4x VL53L1X ToF navigation, and smartwatch caregiver telemetry.</video:description>
+      <video:content_loc>https://alvibot.com/videos/alvi_launch_video.mp4</video:content_loc>
+      <video:duration>41</video:duration>
+      <video:publication_date>2026-11-23T05:00:00+05:30</video:publication_date>
+      <video:family_friendly>yes</video:family_friendly>
+      <video:uploader info="https://alvibot.com/">ALVI Care Systems · Team 43</video:uploader>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://alvibot.com/llms.txt</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://alvibot.com/llms-full.txt</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

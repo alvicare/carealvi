@@ -41,12 +41,21 @@ export function TechSpecsSection() {
       ],
     },
     {
+      category: "COMPUTE & ARCHITECTURE",
+      items: [
+        { label: "Core Processing", value: "Tier 1: ESP32-S3 (FreeRTOS) + Tier 2: Raspberry Pi 4 Model B (4GB / 8GB)" },
+        { label: "Display & Audio", value: "7-inch IPS Capacitive Touchscreen (1024×600) + Dual Beamforming Mics & 5W Speaker" },
+        { label: "Emergency Escalation", value: "Dual-trigger fall detection + 'I'm handling this' lock + 1990 Suwa Seriya ambulance dispatch" },
+        { label: "BOM & Affordability", value: "LKR 110,950 core hardware BOM vs. $2,000+ imported commercial units" },
+      ],
+    },
+    {
       category: "HEALTH TELEMETRY & PRIVACY",
       items: [
-        { label: "Vitals Telemetry", value: "MLX90614 Contactless IR Thermometer (±0.2°C accuracy)" },
-        { label: "Smartwatch Link", value: "Bluetooth 5.3 Low Energy (Apple Watch & Wear OS)" },
-        { label: "Video Calling", value: "LiveKit WebRTC 720p 30fps with Beamforming Dual Microphones" },
-        { label: "Data Governance", value: "Sri Lanka PDPA No. 9 of 2022 & UK GDPR Compliant (Zero Cloud Video)" },
+        { label: "Vitals Telemetry", value: "MLX90614 Contactless IR Thermometer (±0.2°C accuracy) + SpO2 & Heart Rate" },
+        { label: "Smartwatch Link", value: "Bluetooth 5.3 Low Energy (Apple Watch & Wear OS GATT telemetry)" },
+        { label: "Video Calling", value: "LiveKit WebRTC 720p 30fps with on-screen 'Watching' privacy indicator" },
+        { label: "Data Governance", value: "Sri Lanka PDPA No. 9 of 2022 & UK GDPR Compliant (Zero Cloud Raw Video Retention, Ref #CS-43-2026)" },
       ],
     },
   ];

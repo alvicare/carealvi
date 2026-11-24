@@ -1,0 +1,45 @@
+# ALVI One — Full Architecture & System Specification (Team 43)
+
+## 1. System Identity
+- **Product Name:** ALVI / AlviCare One (Autonomous Living & Vitality Intelligence)
+- **Domain:** https://alvibot.com
+- **Institutions:** Informatics Institute of Technology (IIT) in collaboration with University of Westminster
+- **Module:** Agile Team Project (5COSC021W / 5COSC021C.Y) | Academic Year 2026/27
+- **Ethics Clearance:** Ref #CS-43-2026
+
+## 2. Hardware 4-Tier Cyber-Physical Architecture
+- **Tier 1 (MCU):** ESP32-S3 Dual-Core Xtensa LX7 running FreeRTOS with deterministic task queues for motor actuation, optocoupler encoder interrupts, and 500ms BTS7960 safety watchdog stop.
+- **Tier 2 (SBC):** Raspberry Pi 4 Model B (4GB / 8GB) running edge Ubuntu Linux, MediaPipe / YOLOv8 pose estimation, directional audio beamforming, and LiveKit WebRTC peer-to-peer signaling.
+- **Tier 3 (Sensors & Actuation):**
+  - 4x VL53L1X Solid-State Time-of-Flight (ToF) laser sensors (Front, Left, Right, Rear) up to 400cm range at 50Hz.
+  - 3x 30mm cliff-drop infrared reflectance sensors preventing stair tumbles.
+  - 2WD differential geared DC motors driven by high-current BTS7960 43A dual H-bridge.
+  - 5-cylinder hermetic moisture-proof carousel actuated by NEMA 17 stepper motor and slotted optocoupler indexer.
+  - MLX90614 Contactless Palm Thermopile measuring skin temperature (32–37.5°C) to ensure pills dispense only when a human palm is presented.
+  - 750ml Food-Grade BPA-Free Tritan hydration bottle with spring mechanical lock.
+- **Tier 4 (UI & Communication):**
+  - 7-inch IPS capacitive touchscreen (1024×600) with expressive OLED-style companion expressions and large text for presbyopia.
+  - Dual beamforming microphones with acoustic echo cancellation.
+  - Bluetooth 5.3 Low Energy (BLE) GATT telemetry link to ALVI CareWatch and ALVI CarePendant.
+
+## 3. Caregiver Mobile App & Cloud Backend
+- Cross-platform Flutter / React Native mobile application for family caregivers.
+- Zero-password Robot Contact ID (`RC-xxxx`) or QR code pairing for non-technical seniors.
+- Dual-trigger fall escalation sequence:
+  1. CareWatch 3-axis accelerometer/gyroscope detects impact > 3.0g.
+  2. ALVI indoor unit navigates to senior location, performs edge vision confirmation (lying posture > 10s).
+  3. Push alert dispatched to primary caregiver phone with 60-second "I'm handling this" responder lock.
+  4. If unacknowledged within 60s, automated escalation calls Sri Lanka 1990 Suwa Seriya national emergency ambulance service with GPS coordinates.
+
+## 4. Legal, Social, Ethical & Professional (SLEP) Governance
+- Compliant with Sri Lanka Personal Data Protection Act (PDPA) No. 9 of 2022 and UK General Data Protection Regulation (UK GDPR).
+- **Zero Cloud Raw Video Retention:** All video streams via LiveKit WebRTC are ephemeral, encrypted peer-to-peer, and display an on-robot visible "Watching" indicator.
+- **Edge AI Processing:** All computer vision inference happens locally on the Raspberry Pi 4; zero patient images or video frames are transmitted to or stored on cloud servers.
+- **Data Subject Rights:** Full right to erasure, consent withdrawal cut-off date (7 days post-event or 20 November 2026), and tamper-evident audit logging.
+
+## 5. Team 43 Members
+1. Amodh (Kalindu) Gunawardana (w2213308 / 20251407) — Product Owner & Tech Architect
+2. Thisara Chandima (w2212870 / 20251270) — Embedded Hardware Lead
+3. Thevindu Herath (w2212837 / 20250377) — Lead UI/UX Designer
+4. Sithil Hettiarachchi (w2212867 / 20251350) — Core Cloud Backend & UML Systems Lead
+5. Nethum Liyanage (w2212876 / 20250172) — Scrum Master & Master Documentation Lead

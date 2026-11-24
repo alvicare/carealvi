@@ -1,0 +1,31 @@
+# ALVI One — Autonomous Home-Care Companion Robot & Caregiver Ecosystem
+> Official project specification by Team 43 (Informatics Institute of Technology & University of Westminster).
+
+## Overview
+ALVI (Autonomous Living & Vitality Intelligence) is a cyber-physical home-care companion robot and mobile application engineered specifically for older adults living alone in Sri Lanka. It pairs an autonomous physical indoor companion unit with an intuitive smartwatch telemetry link and real-time family caregiver mobile app.
+
+- **Production Domain:** https://alvibot.com
+- **Official Master Video:** https://alvibot.com/videos/alvi_launch_video.mp4
+- **Ethics Clearance Ref:** #CS-43-2026 (University of Westminster & IIT)
+- **Module:** Agile Team Project (5COSC021W / 5COSC021C.Y)
+
+## Core Capabilities & Hardware Architecture
+- **5-Cylinder Hermetic Carousel:** Contactless pill dispensing with slotted optocoupler indexing and MLX90614 Contactless Palm Thermopile verification (32–37.5°C hand temperature detection to ensure medication reaches a human hand).
+- **4x VL53L1X Solid-State ToF Laser Navigation:** Multi-directional obstacle avoidance, 30mm cliff-drop edge braking, and 500ms BTS7960 safety watchdog stop.
+- **Dual-Trigger Fall Escalation:** CareWatch high-G impact + ALVI robot confirmation -> immediate caregiver alert -> "I'm handling this" responder lock -> automated fallback to 1990 Suwa Seriya ambulance dispatch if unacknowledged within 60s.
+- **Zero Cloud Raw Video Privacy:** Peer-to-peer LiveKit WebRTC video calling with an on-robot visible "Watching" notice and zero permanent raw video storage. Fully compliant with Sri Lanka Personal Data Protection Act (PDPA) No. 9 of 2022 and UK GDPR.
+- **Two-Tier Processing:** ESP32-S3 (FreeRTOS) for low-level motor/sensor telemetry + Raspberry Pi 4 Model B for edge vision AI and WebRTC.
+- **Affordable Sri Lankan BOM:** LKR 110,950 core hardware BOM vs. $2,000+ imported commercial alternatives.
+
+## Team 43 Roster & Roles
+- **Amodh (Kalindu) Gunawardana** (UoW: w2213308 / IIT: 20251407) — Product Owner & Tech Architect / Voice AI & Vision Pipeline Lead
+- **Thisara Chandima** (UoW: w2212870 / IIT: 20251270) — Embedded Hardware Lead / ESP32-S3 Firmware, Robotics & BOM Lead
+- **Thevindu Herath** (UoW: w2212837 / IIT: 20250377) — Lead UI/UX Designer & Caregiver Front-End Lead
+- **Sithil Hettiarachchi** (UoW: w2212867 / IIT: 20251350) — Core Cloud Backend Developer & UML Systems Modelling Lead
+- **Nethum Liyanage** (UoW: w2212876 / IIT: 20250172) — Scrum Master & Master Documentation Lead / SLEP & Test Strategy
+
+## Key External Links
+- **Interactive Figma High-Fi Prototype (64 Screens):** https://figma.com/proto/j5njEHLcRjbNR1zCMLDmwm/AlviCare
+- **Atlassian Jira Cloud Board:** https://iit-team-v4kklicw.atlassian.net
+- **Extended Full LLM Reference:** https://alvibot.com/llms-full.txt
+- **Waitlist Registration:** https://alvibot.com/#reserve

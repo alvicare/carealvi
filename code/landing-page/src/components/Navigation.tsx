@@ -5,12 +5,14 @@ import { AlviCareLogo } from "./origami-logo";
 
 interface NavigationProps {
   onOpenWaitlist: () => void;
+  onOpenVideo?: () => void;
   activeSegment: "home-care" | "caregiver-app";
   onSegmentChange: (segment: "home-care" | "caregiver-app") => void;
 }
 
 export function Navigation({
   onOpenWaitlist,
+  onOpenVideo,
   activeSegment,
   onSegmentChange,
 }: NavigationProps) {
@@ -99,14 +101,23 @@ export function Navigation({
         </nav>
       </div>
 
-      {/* RIGHT: Order Dark Pill CTA */}
-      <div className="flex items-center gap-4 sm:gap-5 pointer-events-auto">
-        {/* Dark Pill Button */}
+      {/* RIGHT: Watch Film + Waitlist CTA */}
+      <div className="flex items-center gap-2.5 sm:gap-3.5 pointer-events-auto">
+        {onOpenVideo && (
+          <button
+            onClick={onOpenVideo}
+            className="hidden md:inline-flex items-center gap-1.5 h-[32px] px-3.5 rounded-[100px] border border-[#DEDEDE] bg-white/80 hover:bg-white text-[#454545] text-[13px] font-normal tracking-tight transition-all duration-200 backdrop-blur-md"
+            aria-label="Watch ALVI One Launch Film"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Watch Film (41s)
+          </button>
+        )}
         <button
           onClick={onOpenWaitlist}
-          className="h-[32px] px-4 rounded-[100px] bg-[#454545] hover:bg-[#1D1D1F] text-white text-[13px] font-normal tracking-tight transition-all duration-300 transform active:scale-95 shadow-[0_2px_8px_rgba(69,69,69,0.18)]"
+          className="h-[32px] px-4 rounded-[100px] bg-[#0F766E] hover:bg-[#0D655E] text-white text-[13px] font-medium tracking-tight transition-all duration-300 transform active:scale-95 shadow-[0_2px_8px_rgba(15,118,110,0.25)]"
         >
-          Order
+          Join Waitlist
         </button>
       </div>
     </header>

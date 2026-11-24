@@ -14,12 +14,14 @@ import { EcosystemSection } from "@/components/EcosystemSection";
 import { TechSpecsSection } from "@/components/TechSpecsSection";
 import { PreorderBannerSection } from "@/components/PreorderBannerSection";
 import { WaitlistModal } from "@/components/WaitlistModal";
+import { VideoModal } from "@/components/VideoModal";
 import { Footer } from "@/components/Footer";
 import { WelcomeAudio } from "@/components/WelcomeAudio";
 import { Preloader } from "@/components/Preloader";
 
 export default function HomePage() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [activeSegment, setActiveSegment] = useState<"home-care" | "caregiver-app">(
     "home-care"
   );
@@ -44,6 +46,7 @@ export default function HomePage() {
       {/* 1. Top Fixed Navigation */}
       <Navigation
         onOpenWaitlist={() => setIsWaitlistOpen(true)}
+        onOpenVideo={() => setIsVideoOpen(true)}
         activeSegment={activeSegment}
         onSegmentChange={handleSegmentChange}
       />
@@ -86,16 +89,22 @@ export default function HomePage() {
       {/* 8. Section 7: Technical Specifications Matrix */}
       <TechSpecsSection />
 
-      {/* 9. Section 8: Pre-order & Early Access Reservation Banner */}
+      {/* 9. Section 8: Priority Waitlist Allocation Banner */}
       <PreorderBannerSection onOpenWaitlist={() => setIsWaitlistOpen(true)} />
 
       {/* 10. Minimal Industrial Footer */}
       <Footer />
 
-      {/* 11. Sleek Waitlist / Order Modal */}
+      {/* 11. Sleek Waitlist Modal */}
       <WaitlistModal
         isOpen={isWaitlistOpen}
         onClose={() => setIsWaitlistOpen(false)}
+      />
+
+      {/* 11b. Master Launch Video Modal */}
+      <VideoModal
+        isOpen={isVideoOpen}
+        onClose={() => setIsVideoOpen(false)}
       />
 
       {/* 12. Cinematic Welcome Audio System */}

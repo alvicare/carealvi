@@ -76,13 +76,19 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
 
     // Forward to background email notification API
     try {
-      await fetch("/api/order", {
+      await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newReservation),
+      }).catch(() => {
+        return fetch("/api/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newReservation),
+        });
       });
     } catch {
-      // Fallback gracefully if running in static mode without live API
+      // Fallback gracefully if running in static offline mode
     }
 
     setReservationId(newReservation.id);
@@ -140,9 +146,9 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
 
             {/* Header Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[100px] bg-[#F3F3F6] border border-[#DEDEDE] mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#5B6B7E] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-[11px] font-medium tracking-wide text-[#6E6E73] uppercase">
-                Priority Batch 01 Allocation
+                Priority Batch 01 Waitlist
               </span>
             </div>
 
@@ -150,13 +156,13 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               id="modal-title"
               className="text-[26px] font-medium text-[#454545] tracking-tight leading-tight mb-2"
             >
-              Reserve Early Access
+              Join the ALVI One Priority Waitlist
             </h3>
 
             <p className="text-[14px] text-[#6E6E73] leading-relaxed mb-6">
               Claim an initial deployment slot for the{" "}
               <strong className="text-[#454545] font-medium">ALVI One</strong>{" "}
-              autonomous indoor unit &amp; companion caregiver link.
+              autonomous home-care companion robot &amp; caregiver mobile app.
             </p>
 
             {/* Live Reservation Counter */}
@@ -310,9 +316,9 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               <button
                 type="submit"
                 disabled={!consent || submitting}
-                className="w-full h-[46px] rounded-[100px] bg-[#454545] hover:bg-[#1D1D1F] disabled:opacity-50 text-white text-[14px] font-medium tracking-tight transition-all duration-300 transform active:scale-98 shadow-[0_4px_16px_rgba(69,69,69,0.2)] mt-3 flex items-center justify-center gap-2"
+                className="w-full h-[46px] rounded-[100px] bg-[#0F766E] hover:bg-[#0D655E] disabled:opacity-50 text-white text-[14px] font-medium tracking-tight transition-all duration-300 transform active:scale-98 shadow-[0_4px_16px_rgba(15,118,110,0.3)] mt-3 flex items-center justify-center gap-2"
               >
-                {submitting ? "Confirming & Dispatching..." : "Confirm Priority Reservation"}
+                {submitting ? "Securing Spot & Emailing..." : "Join Priority Waitlist"}
               </button>
             </form>
           </div>
@@ -324,19 +330,19 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             </div>
 
             <h3 className="text-[22px] font-medium text-[#454545] tracking-tight mb-2">
-              Allocation Reserved
+              Waitlist Spot Confirmed
             </h3>
 
             <p className="text-[14px] text-[#6E6E73] leading-relaxed max-w-[380px] mx-auto mb-4">
               Thank you, <strong className="text-[#454545]">{name}</strong>. Your priority
-              reservation pass has been generated and dispatched to our engineering team.
+              waitlist registration has been secured and an email notification has been dispatched to our engineering team.
             </p>
 
             {/* Pass Card */}
             <div className="bg-[#F8F9FA] border border-[#E8E8ED] rounded-2xl p-4 text-left max-w-[380px] mx-auto mb-5">
               <div className="flex justify-between items-center pb-2 border-b border-[#DEDEDE] mb-2">
                 <span className="text-[10px] font-mono text-[#6E6E73] uppercase">
-                  Reservation Pass
+                  Waitlist Pass
                 </span>
                 <span className="text-[12px] font-mono font-semibold text-[#0F766E]">
                   {reservationId}

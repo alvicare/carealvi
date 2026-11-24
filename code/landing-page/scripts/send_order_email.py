@@ -118,6 +118,10 @@ Domain: https://alvibot.com
     admin_msg.attach(MIMEText(admin_text, "plain"))
     admin_msg.attach(MIMEText(admin_html, "html"))
 
+    if not GMAIL_APP_PASS:
+        print("[NOTICE] GMAIL_APP_PASS is not set. To send emails via Gmail SMTP, run with: GMAIL_APP_PASS=... python3 send_order_email.py", file=sys.stderr)
+        return False
+
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=12) as server:
             server.login(GMAIL_USER, GMAIL_APP_PASS)
