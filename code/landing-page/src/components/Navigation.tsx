@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { AlviCareLogo } from "./origami-logo";
-import { VelourBolster } from "./VelourBolster";
 
 interface NavigationProps {
   onOpenWaitlist: () => void;
@@ -114,22 +113,12 @@ export function Navigation({
             Watch Film (41s)
           </button>
         )}
-        <VelourBolster
-          text="Join Waitlist"
-          fabric="#0F766E"
-          textColor="#FFFFFF"
-          buttonWidth={120}
-          buttonHeight={32}
-          radius={16}
-          compact={true}
+        <button
           onClick={onOpenWaitlist}
-          font={{
-            fontFamily: '"Plus Jakarta Sans", "Inter", sans-serif',
-            fontWeight: 600,
-            fontSize: 13,
-            letterSpacing: "-0.01em",
-          }}
-        />
+          className="h-[32px] px-4 rounded-[100px] bg-[#0F766E] hover:bg-[#0D655E] text-white text-[13px] font-medium tracking-tight transition-all duration-300 transform active:scale-95 shadow-[0_2px_8px_rgba(15,118,110,0.25)]"
+        >
+          Join Waitlist
+        </button>
       </div>
     </header>
   );
