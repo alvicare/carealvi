@@ -69,10 +69,10 @@ export interface HalftoneWordmarkFooterProps {
 }
 
 const PRESETS: { [K in HalftonePreset]: HalftonePalette } = {
-  night: { background: "#0c0c0b", ink: "#e9e4da", warm: "#e9762b" },
-  paper: { background: "#efebe3", ink: "#17150f", warm: "#c2361c" },
-  ember: { background: "#160a06", ink: "#f2c48c", warm: "#ff5a1f" },
-  cobalt: { background: "#0d1b4d", ink: "#dfe7ff", warm: "#ffcd3c" },
+  night: { background: "#083B37", ink: "#EEEFEC", warm: "#F59E5B" },
+  paper: { background: "#EEEFEC", ink: "#0B4F4A", warm: "#F59E5B" },
+  ember: { background: "#0F766E", ink: "#FFFFFF", warm: "#F59E5B" },
+  cobalt: { background: "#14B8A6", ink: "#083B37", warm: "#F59E5B" },
 };
 
 export const ALVICARE_FOOTER_COLUMNS: FooterColumn[] = [
@@ -106,7 +106,9 @@ export const ALVICARE_FOOTER_COLUMNS: FooterColumn[] = [
 ];
 
 const SANS_STACK =
-  '"Oakes Grotesk", "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+  '"Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+const BODY_STACK =
+  '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
 const MONO_STACK =
   '"JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace';
 
@@ -189,7 +191,7 @@ const HWF_CSS = `
 .hwf-top {
   position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.25fr) repeat(3, minmax(0, 1fr));
   gap: 24px; padding: clamp(28px, 3.8vw, 48px) clamp(20px, 3.4vw, 44px) 0;
-  font-family: var(--hwf-mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; line-height: 1.75;
+  font-family: var(--hwf-sans); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; line-height: 1.75;
 }
 .hwf-brand strong { display: block; font-weight: 600; font-size: 13px; letter-spacing: .12em; color: var(--hwf-ink); }
 .hwf-brand span { opacity: .55; font-size: 11px; }
@@ -207,7 +209,7 @@ const HWF_CSS = `
   position: relative; z-index: 1; display: flex; justify-content: flex-end; align-items: center; gap: 16px;
   margin: clamp(18px, 2.6vw, 30px) clamp(20px, 3.4vw, 44px) 0; padding-top: 12px;
   border-top: 0.5px solid color-mix(in srgb, var(--hwf-ink) 16%, transparent);
-  font-family: var(--hwf-mono); font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase;
+  font-family: var(--hwf-sans); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
 }
 .hwf-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @media (max-width: 720px) {
@@ -540,6 +542,7 @@ export function HalftoneWordmarkFooter({
           height,
           "--hwf-bg": colors.background,
           "--hwf-ink": colors.ink,
+          "--hwf-sans": BODY_STACK,
           "--hwf-mono": monoFamily,
         } as React.CSSProperties
       }

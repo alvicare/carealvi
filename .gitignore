@@ -54,3 +54,25 @@ Meetings/
 coursework_jira_audit_report.json
 whatsapp_cw1_summary.txt
 verify_coursework_jira.py
+
+# TypeScript build cache
+*.tsbuildinfo
+
+# Unofficial local archive (presentations, PDFs, docs, raw 3D/media sources, local scripts)
+unofficial/
+
+# AI assistant instructions, agent configs, prompts & audit logs
+CLAUDE.md
+GEMINI.md
+COPILOT.md
+design.md
+.claude/
+.gemini/
+.cursor/
+.cursorrules
+.cursorignore
+.windsurfrules
+.clinerules
+.agent/
+.agents/
+.github/copilot-instructions.md

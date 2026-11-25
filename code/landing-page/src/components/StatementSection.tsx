@@ -52,11 +52,11 @@ export function StatementSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[220vh] bg-[#F3F3F6]"
+      className="relative w-full h-[180vh] md:h-[220vh] bg-surface"
       aria-label="ALVICARE Statement"
     >
       {/* Sticky Full-Viewport Stage: locks into place when it reaches the top */}
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex items-center justify-center px-6 sm:px-12 md:px-20 lg:px-24">
+      <div className="sticky top-0 left-0 w-full h-[100svh] overflow-hidden flex items-center justify-center px-6 sm:px-12 md:px-20 lg:px-24">
         {/* Soft Blurred Out-Of-Focus Macro Abstract Background */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
           {/* Soft Aluminium Base Macro Highlight */}
@@ -64,21 +64,21 @@ export function StatementSection() {
             className="absolute -top-36 left-1/4 w-[700px] h-[700px] rounded-full bg-white/80"
             style={{ filter: "blur(85px)" }}
           />
-          {/* Slate Blue-Grey (#5B6B7E) Organic Depth Gradient */}
+          {/* Slate Blue-Grey (#0F766E) Organic Depth Gradient */}
           <div
-            className="absolute top-1/3 -right-24 w-[760px] h-[760px] rounded-full bg-[#5B6B7E]/18"
+            className="absolute top-1/3 -right-24 w-[760px] h-[760px] rounded-full bg-brand-teal/18"
             style={{ filter: "blur(95px)" }}
           />
           {/* Warm Studio Aluminium Curve */}
           <div
-            className="absolute -bottom-28 left-1/3 w-[560px] h-[560px] rounded-full bg-[#E6EAEF]/90"
+            className="absolute -bottom-28 left-1/3 w-[560px] h-[560px] rounded-full bg-brand-pale/90"
             style={{ filter: "blur(85px)" }}
           />
           {/* Subtle Macro Material Texture */}
           <div
             className="absolute inset-0 opacity-[0.035]"
             style={{
-              backgroundImage: `radial-gradient(#454545 1px, transparent 1px)`,
+              backgroundImage: `radial-gradient(#1E2023 1px, transparent 1px)`,
               backgroundSize: "24px 24px",
             }}
           />
@@ -89,10 +89,10 @@ export function StatementSection() {
           {/* Word-by-Word Scrubbed Reveal (Activates only when pinned) */}
           <p
             className="text-[26px] sm:text-[34px] md:text-[42px] lg:text-[46px] leading-[1.3] sm:leading-[1.28] font-light tracking-[-0.02em] text-center"
-            style={{ color: "#454545" }}
+            style={{ color: "#1E2023" }}
           >
             {words.map((word, index) => {
-              // Words 0 and 1 ("Care shouldn't") are dark (#454545, opacity 1) at rest
+              // Words 0 and 1 ("Care shouldn't") are dark (#1E2023, opacity 1) at rest
               let opacity = 0.25;
 
               if (index <= 1) {
@@ -121,7 +121,7 @@ export function StatementSection() {
                   className="inline-block mx-[0.16em] transition-opacity duration-150"
                   style={{
                     opacity,
-                    color: "#454545",
+                    color: "#1E2023",
                   }}
                 >
                   {word}

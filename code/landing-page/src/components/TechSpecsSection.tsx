@@ -63,17 +63,17 @@ export function TechSpecsSection() {
   return (
     <section
       id="specifications"
-      className="w-full py-28 sm:py-36 bg-white border-t border-[#DEDEDE]"
+      className="w-full py-28 sm:py-36 bg-white border-t border-divider"
       aria-label="Technical Specifications"
     >
       <div className="max-w-[1240px] mx-auto px-6 sm:px-12 md:px-16">
         {/* Section Header */}
         <div className="max-w-[720px] mb-16 sm:mb-20">
-          <span className="text-[11px] font-mono tracking-widest text-[#5B6B7E] uppercase block mb-3">
+          <span className="text-[11px] font-mono tracking-widest text-brand-teal uppercase block mb-3">
             SPECIFICATION MATRIX
           </span>
           <h2
-            className="font-normal text-[#454545] tracking-[-0.01em] mb-4"
+            className="font-normal text-brand-deep tracking-[-0.01em] mb-4"
             style={{
               fontSize: "clamp(34px, 4vw, 51px)",
               lineHeight: 1.1,
@@ -81,7 +81,7 @@ export function TechSpecsSection() {
           >
             Technical specifications.
           </h2>
-          <p className="text-[15px] sm:text-[16px] text-[#6E6E73] leading-[1.5] font-normal">
+          <p className="text-[15px] sm:text-[16px] text-muted leading-[1.5] font-normal">
             Industrial engineering built to commercial health and safety standards.
           </p>
         </div>
@@ -89,8 +89,8 @@ export function TechSpecsSection() {
         {/* Minimal Spec Rows */}
         <div className="space-y-12">
           {specs.map((section) => (
-            <div key={section.category} className="border-t border-[#DEDEDE] pt-6">
-              <span className="text-[11px] font-mono tracking-wider text-[#5B6B7E] font-medium uppercase block mb-6">
+            <div key={section.category} className="border-t border-divider pt-6">
+              <span className="text-[11px] font-mono tracking-wider text-brand-teal font-medium uppercase block mb-6">
                 {section.category}
               </span>
 
@@ -98,12 +98,12 @@ export function TechSpecsSection() {
                 {section.items.map((item) => (
                   <div
                     key={item.label}
-                    className="flex flex-col sm:flex-row sm:items-baseline justify-between py-2 border-b border-[#DEDEDE]/60 gap-1 text-[13px]"
+                    className="flex flex-col sm:flex-row sm:items-baseline justify-between py-2 border-b border-divider/60 gap-1 text-[13px]"
                   >
-                    <span className="text-[#6E6E73] font-normal sm:w-1/3">
+                    <span className="text-muted font-normal sm:w-1/3">
                       {item.label}
                     </span>
-                    <span className="text-[#454545] font-medium sm:w-2/3 sm:text-right">
+                    <span className="text-primary font-medium sm:w-2/3 sm:text-right">
                       {item.value}
                     </span>
                   </div>

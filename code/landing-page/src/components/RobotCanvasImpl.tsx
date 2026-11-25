@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useRef, useMemo, useState, useEffect } from "react";
+import React, { useRef, useMemo, useState, useEffect, type MutableRefObject } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, ContactShadows, Environment } from "@react-three/drei";
+import { useGLTF, ContactShadows, Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 
 interface RobotModelProps {
-  scrollProgress: number; // 0.0 to 1.0
+  scrollProgressRef: MutableRefObject<number>;
   showHotspots?: boolean;
 }
 
@@ -14,12 +14,21 @@ interface RobotModelProps {
 // The photorealistic transparent exploded smartwatch layer (WatchHeroLayer.tsx)
 // is rendered at z-[5] directly behind the 3D robot model in HeroScrollSection.tsx.
 
-function RobotModel({ scrollProgress }: RobotModelProps) {
+function RobotModel({ scrollProgressRef }: RobotModelProps) {
   const groupRef = useRef<THREE.Group>(null);
   const robotRootRef = useRef<THREE.Group>(null);
 
   // Load the GLB model from public path
   const { scene } = useGLTF("/models/robot_model.glb");
+
+  // Handle responsive sizing
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Clone scene so multiple mounts or reloads are safe
   const clonedScene = useMemo(() => {
@@ -29,8 +38,8 @@ function RobotModel({ scrollProgress }: RobotModelProps) {
     clone.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        mesh.castShadow = !isMobile;
+        mesh.receiveShadow = !isMobile;
 
         const name = mesh.name.toLowerCase();
 
@@ -130,20 +139,12 @@ function RobotModel({ scrollProgress }: RobotModelProps) {
     });
 
     return clone;
-  }, [scene]);
-
-  // Handle responsive sizing
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  }, [scene, isMobile]);
 
   // Frame update: Smooth damped scroll choreography
   useFrame((state, delta) => {
     const time = state.clock.getElapsedTime();
+    const scrollProgress = scrollProgressRef.current;
 
     if (!robotRootRef.current) return;
 
@@ -219,27 +220,36 @@ function RobotModel({ scrollProgress }: RobotModelProps) {
       </group>
 
       {/* Soft Contact Shadows on Floor */}
-      <ContactShadows
+      {!isMobile && <ContactShadows
         position={[0, -0.68, 0]}
         opacity={0.3}
         scale={3.8}
         blur={2.4}
         far={1.8}
         color="#5B6B7E"
-      />
+        frames={1}
+      />}
     </group>
   );
 }
 
-export function RobotCanvasImpl({ scrollProgress }: RobotModelProps) {
+export function RobotCanvasImpl({ scrollProgressRef }: RobotModelProps) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <div
       className="w-full h-full relative"
       aria-label="ALVICARE 3D Interactive Canvas"
     >
       <Canvas
-        camera={{ position: [0, 0.26, 2.45], fov: 38 }}
-        dpr={[1, 2]}
+        camera={{ position: isMobile ? [0, 0.2, 3.1] : [0, 0.26, 2.45], fov: 38 }}
+        dpr={isMobile ? [1, 1.25] : [1, 2]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         className="w-full h-full"
       >
@@ -248,7 +258,7 @@ export function RobotCanvasImpl({ scrollProgress }: RobotModelProps) {
         <directionalLight
           position={[4, 6, 4]}
           intensity={1.35}
-          castShadow
+          castShadow={!isMobile}
           shadow-mapSize={[1024, 1024]}
         />
         <directionalLight
@@ -262,9 +272,13 @@ export function RobotCanvasImpl({ scrollProgress }: RobotModelProps) {
           color="#FFFFFF"
         />
 
-        <Environment preset="studio" />
+        <Environment resolution={256}>
+          <Lightformer form="rect" intensity={2} position={[0, 5, -5]} scale={[10, 10, 1]} />
+          <Lightformer form="rect" intensity={1} position={[-5, 2, 2]} scale={[5, 5, 1]} />
+          <Lightformer form="rect" intensity={1} position={[5, 1, 1]} scale={[5, 4, 1]} />
+        </Environment>
 
-        <RobotModel scrollProgress={scrollProgress} />
+        <RobotModel scrollProgressRef={scrollProgressRef} />
       </Canvas>
     </div>
   );

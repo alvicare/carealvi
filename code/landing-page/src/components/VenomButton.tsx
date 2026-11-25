@@ -1541,7 +1541,7 @@ function __OriginkitBase_VenomButton(props: VenomButtonProps) {
           margin: 0,
           color: textColor,
           fontFamily:
-            "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Inter, system-ui, sans-serif",
+            "Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif",
           fontSize: font?.fontSize ?? defaultFontSize,
           fontWeight: font?.fontWeight ?? 600,
           letterSpacing: font?.letterSpacing ?? "-0.01em",

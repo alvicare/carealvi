@@ -11,21 +11,21 @@ export function PreorderBannerSection({ onOpenWaitlist }: PreorderBannerProps) {
   return (
     <section
       id="reserve"
-      className="w-full py-20 sm:py-28 bg-[#F3F3F6] border-t border-[#DEDEDE]"
+      className="w-full py-20 sm:py-28 bg-surface border-t border-divider"
       aria-label="Priority Waitlist Allocation"
     >
       <div className="max-w-[1240px] mx-auto px-6 sm:px-12 md:px-16 text-center">
         <div className="max-w-[700px] mx-auto">
           {/* Subtle Live Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#DEDEDE] mb-6 shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[11px] font-mono tracking-wide text-[#6E6E73] uppercase font-medium">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-divider mb-6 shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-teal animate-pulse" />
+            <span className="text-[11px] font-mono tracking-wide text-muted uppercase font-medium">
               Batch 01 Priority Waitlist · 184 of 250 Claimed
             </span>
           </div>
 
           <h2
-            className="font-normal text-[#454545] tracking-[-0.01em] mb-4"
+            className="font-normal text-brand-deep tracking-[-0.01em] mb-4"
             style={{
               fontSize: "clamp(34px, 4vw, 51px)",
               lineHeight: 1.1,
@@ -34,7 +34,7 @@ export function PreorderBannerSection({ onOpenWaitlist }: PreorderBannerProps) {
             Join the ALVI One Priority Waitlist.
           </h2>
 
-          <p className="text-[15px] sm:text-[16px] text-[#6E6E73] leading-[1.6] font-normal mb-6">
+          <p className="text-[15px] sm:text-[16px] text-muted leading-[1.6] font-normal mb-6">
             Be the first to bring intelligent, dignified home care to your loved ones. Early waitlist members secure priority Batch 01 allocation, unlimited caregiver app licenses, and white-glove in-home setup in Sri Lanka.
           </p>
 
@@ -45,7 +45,7 @@ export function PreorderBannerSection({ onOpenWaitlist }: PreorderBannerProps) {
               onClick={onOpenWaitlist}
               size={56}
               background="transparent"
-              gooColor="#0A0A0C"
+              gooColor="#0B4F4A"
               textColor="#FFFFFF"
               font={{
                 fontSize: "15px",

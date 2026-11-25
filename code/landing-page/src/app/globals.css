@@ -1,32 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
+  --brand-teal: #0F766E;
+  --brand-teal-deep: #0B4F4A;
+  --brand-mint: #14B8A6;
+  --brand-mint-bright: #54C2B4;
+  --brand-orange: #F59E5B;
+  --brand-dark: #083B37;
+  --brand-shadow: #072B28;
+  --brand-pale: #EEEFEC;
   --bg-page: #FFFFFF;
-  --surface: #F3F3F6;
-  --text-primary: #454545;
-  --text-muted: #6E6E73;
-  --text-numeral: #BEBEBE;
-  --divider: #DEDEDE;
-  --slate-accent: #5B6B7E;
+  --surface: var(--brand-pale);
+  --text-primary: #1E2023;
+  --text-muted: #626B6A;
+  --text-numeral: #AAB7B5;
+  --divider: #DCE5E3;
+  --slate-accent: var(--brand-teal);
 
   /* Architectural & Lanyard Rail Design Tokens */
-  --color-background: #F3F3F6;
-  --color-foreground: #454545;
+  --color-background: var(--surface);
+  --color-foreground: #1E2023;
   --color-card: #FFFFFF;
-  --color-card-foreground: #1D1D1F;
-  --color-muted: #EBEBEF;
-  --color-muted-foreground: #6E6E73;
-  --color-border: #DEDEDE;
-  --color-ring: #5B6B7E;
-  --color-chart-1: #5B6B7E;
-  --color-chart-2: #454545;
-  --color-chart-3: #8B9BAB;
-  --color-chart-4: #6A7B76;
-  --color-chart-5: #1D1D1F;
+  --color-card-foreground: #1E2023;
+  --color-muted: #EAF1EF;
+  --color-muted-foreground: #626B6A;
+  --color-border: #DCE5E3;
+  --color-ring: var(--brand-teal);
+  --color-chart-1: var(--brand-teal);
+  --color-chart-2: var(--brand-teal-deep);
+  --color-chart-3: var(--brand-mint-bright);
+  --color-chart-4: var(--brand-orange);
+  --color-chart-5: var(--brand-dark);
 }
 
 * {
@@ -36,9 +42,9 @@
 }
 
 html {
-  background-color: #FFFFFF;
-  color: #454545;
-  font-family: "Oakes Grotesk", Inter, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   scroll-behavior: smooth;
   text-rendering: optimizeLegibility;
 }
@@ -47,8 +53,17 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: #FFFFFF;
-  color: #454545;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space-grotesk), var(--font-inter), sans-serif;
+}
+
+button, input, select, textarea {
+  font: inherit;
 }
 
 /* Custom scrollbar to match airform minimalist aesthetic */
@@ -60,11 +75,11 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #DEDEDE;
+  background: var(--divider);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #BEBEBE;
+  background: var(--text-numeral);
 }
 
 /* Lanyard rail utility bridge */
@@ -85,24 +100,34 @@ body {
 
 /* Custom utility styles */
 .frosted-pill {
-  background: rgba(232, 232, 237, 0.72);
+  background: color-mix(in srgb, var(--brand-pale) 82%, transparent);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(222, 222, 222, 0.65);
+  border: 1px solid color-mix(in srgb, var(--divider) 65%, transparent);
 }
 
 .frosted-card {
   background: rgba(255, 255, 255, 0.86);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(222, 222, 222, 0.75);
+  border: 1px solid color-mix(in srgb, var(--divider) 75%, transparent);
 }
 
 .hero-wordmark-gradient {
-  background: linear-gradient(180deg, #5B6B7E 0%, #B8C0C8 52%, #FFFFFF 95%);
+  background: linear-gradient(180deg, var(--brand-teal) 0%, var(--brand-mint-bright) 52%, var(--bg-page) 95%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+}
+
+@media (max-width: 640px) {
+  h1, h2 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
 }
 
 @keyframes fadeInSide {

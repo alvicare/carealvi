@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, type MutableRefObject } from "react";
 import dynamic from "next/dynamic";
 
 const RobotCanvasImpl = dynamic(
@@ -10,7 +10,7 @@ const RobotCanvasImpl = dynamic(
     loading: () => (
       <div className="w-full h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded-full border-2 border-[#DEDEDE] border-t-[#5B6B7E] animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-divider border-t-brand-teal animate-spin" />
         </div>
       </div>
     ),
@@ -18,7 +18,7 @@ const RobotCanvasImpl = dynamic(
 );
 
 interface RobotCanvasProps {
-  scrollProgress: number;
+  scrollProgressRef: MutableRefObject<number>;
   showHotspots?: boolean;
 }
 
@@ -33,7 +33,7 @@ export function RobotCanvas(props: RobotCanvasProps) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded-full border-2 border-[#DEDEDE] border-t-[#5B6B7E] animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-divider border-t-brand-teal animate-spin" />
         </div>
       </div>
     );

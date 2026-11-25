@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useState, useMemo, type MutableRefObject } from "react";
 
 /**
  * ==============================================================================
@@ -161,12 +161,12 @@ export const WATCH_CONFIG = {
 };
 
 interface WatchHeroLayerProps {
-  scrollProgress: number; // 0.0 to 1.0 from HeroScrollSection
+  scrollProgressRef: MutableRefObject<number>;
   customConfig?: Partial<typeof WATCH_CONFIG>;
 }
 
 export function WatchHeroLayer({
-  scrollProgress,
+  scrollProgressRef,
   customConfig,
 }: WatchHeroLayerProps) {
   // Merge default config with any custom overrides passed via props
@@ -176,152 +176,150 @@ export function WatchHeroLayer({
   );
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const frameNumbersRef = useRef<number[]>([]);
+  const drawFrameRef = useRef<(force?: boolean) => void>(() => {});
+  const [isMobile, setIsMobile] = useState(false);
 
-  // 1. Calculate dynamic vertical & horizontal position (Phase 1 Glide)
-  const { currentTop, currentLeft } = useMemo(() => {
-    if (scrollProgress <= config.glideStart) {
-      return {
-        currentTop: `${config.initialTop}%`,
-        currentLeft: `${config.initialLeft}%`,
-      };
-    }
+  useEffect(() => {
+    const updateMobile = () => setIsMobile(window.innerWidth < 768);
+    updateMobile();
+    window.addEventListener("resize", updateMobile);
+    return () => window.removeEventListener("resize", updateMobile);
+  }, []);
 
-    if (scrollProgress >= config.glideEnd) {
-      return {
-        currentTop: `${config.finalTop}%`,
-        currentLeft: `${config.finalLeft}%`,
-      };
-    }
-
-    const p =
-      (scrollProgress - config.glideStart) /
-      (config.glideEnd - config.glideStart);
-    // Smooth cubic ease-out
-    const ease = 1 - Math.pow(1 - p, 3);
-
-    const topVal =
-      config.initialTop + (config.finalTop - config.initialTop) * ease;
-    const leftVal =
-      config.initialLeft + (config.finalLeft - config.initialLeft) * ease;
-
-    return {
-      currentTop: `${topVal.toFixed(2)}%`,
-      currentLeft: `${leftVal.toFixed(2)}%`,
-    };
-  }, [scrollProgress, config]);
-
-  // 2. Calculate dynamic visibility & opacity based on scroll
-  const currentOpacity = useMemo(() => {
-    if (!config.hideInInitialFrame) {
-      return config.opacity;
-    }
-
-    if (scrollProgress <= config.emergeStart) {
-      return 0; // Completely hidden before scroll starts
-    }
-
-    if (scrollProgress >= config.emergeEnd) {
-      return config.opacity;
-    }
-
-    // Smooth ease-in fade
-    const revealP =
-      (scrollProgress - config.emergeStart) /
-      (config.emergeEnd - config.emergeStart);
-    const easeReveal = 1 - Math.pow(1 - revealP, 3);
-    return config.opacity * easeReveal;
-  }, [scrollProgress, config]);
-
-  // 3. Calculate frame index based on scrollProgress
-  // - Before config.scrollStart: locked at Frame 1 (index 0)
-  // - After config.scrollStart: scrubs through remaining exploded frames (0 to totalFrames - 1)
-  const currentFrameIndex = useMemo(() => {
-    if (scrollProgress < config.scrollStart) {
-      return 0; // Phase 1: Frame does not move while gliding into position!
-    }
-
-    const clampedProgress = Math.min(
-      1,
-      Math.max(
-        0,
-        (scrollProgress - config.scrollStart) /
-          (config.scrollEnd - config.scrollStart)
-      )
-    );
-
-    return Math.min(
-      config.totalFrames - 1,
-      Math.max(0, Math.floor(clampedProgress * (config.totalFrames - 1)))
-    );
-  }, [scrollProgress, config]);
-
-  // 4. Preload frame sequence for scroll-scrub mode
+  // Load the first frame immediately and defer the rest until the hero is near.
   useEffect(() => {
     if (config.mode !== "scroll") return;
 
     let isCancelled = false;
-    const images: HTMLImageElement[] = [];
-    let loadedCount = 0;
+    let remainingLoaded = false;
+    const frameNumbers = Array.from({ length: config.totalFrames }, (_, i) => i)
+      .filter((index) => !isMobile || index % 2 === 0);
+    if (frameNumbers[frameNumbers.length - 1] !== config.totalFrames - 1) {
+      frameNumbers.push(config.totalFrames - 1);
+    }
+    frameNumbersRef.current = frameNumbers;
+    const images: HTMLImageElement[] = new Array(frameNumbers.length);
 
-    for (let i = 1; i <= config.totalFrames; i++) {
+    const loadFrame = (slot: number) => {
+      if (isCancelled || images[slot]) return;
       const img = new Image();
-      const frameNum = String(i).padStart(4, "0");
+      const frameNum = String(frameNumbers[slot] + 1).padStart(4, "0");
       img.src = `${config.framesBaseUrl}${frameNum}.webp`;
-
       img.onload = () => {
         if (isCancelled) return;
-        loadedCount++;
-        // As soon as the first frame loads, we can render immediately
-        if (loadedCount === 1) {
-          setImagesLoaded(true);
-        }
+        drawFrameRef.current(true);
       };
-
-      images.push(img);
-    }
+      images[slot] = img;
+    };
+    loadFrame(0);
 
     imagesRef.current = images;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (remainingLoaded || !entries.some((entry) => entry.isIntersecting)) return;
+        remainingLoaded = true;
+        for (let slot = 1; slot < frameNumbers.length; slot++) loadFrame(slot);
+        observer.disconnect();
+      },
+      { rootMargin: "100% 0px" }
+    );
+    const host = wrapperRef.current;
+    if (host) observer.observe(host);
 
     return () => {
       isCancelled = true;
+      observer.disconnect();
     };
-  }, [config.mode, config.totalFrames, config.framesBaseUrl]);
+  }, [config.mode, config.totalFrames, config.framesBaseUrl, isMobile]);
 
-  // 5. Draw current frame to canvas on scroll
+  // Ref-driven draw loop: scroll never causes a React render in the hero.
   useEffect(() => {
     if (config.mode !== "scroll") return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    let rafId: number | null = null;
+    let previousSlot = -1;
+    const drawFrame = (force = false) => {
+      const progress = scrollProgressRef.current;
+      let top = config.initialTop;
+      let left = config.initialLeft;
+      if (progress >= config.glideEnd) {
+        top = config.finalTop;
+        left = config.finalLeft;
+      } else if (progress > config.glideStart) {
+        const p = (progress - config.glideStart) / (config.glideEnd - config.glideStart);
+        const ease = 1 - Math.pow(1 - p, 3);
+        top += (config.finalTop - config.initialTop) * ease;
+        left += (config.finalLeft - config.initialLeft) * ease;
+      }
+      let opacity = config.opacity;
+      if (config.hideInInitialFrame) {
+        if (progress <= config.emergeStart) opacity = 0;
+        else if (progress < config.emergeEnd) {
+          const revealP = (progress - config.emergeStart) / (config.emergeEnd - config.emergeStart);
+          opacity *= 1 - Math.pow(1 - revealP, 3);
+        }
+      }
+      const wrapper = wrapperRef.current;
+      if (wrapper) {
+        wrapper.style.top = `${top.toFixed(2)}%`;
+        wrapper.style.left = `${left.toFixed(2)}%`;
+        wrapper.style.opacity = String(opacity);
+        wrapper.style.visibility = opacity <= 0 ? "hidden" : "visible";
+      }
 
-    const currentImg = imagesRef.current[currentFrameIndex];
-    if (currentImg && currentImg.complete && currentImg.naturalWidth > 0) {
-      if (canvas.width !== currentImg.naturalWidth) {
+      const frames = frameNumbersRef.current;
+      const sequenceProgress = progress < config.scrollStart
+        ? 0
+        : Math.min(1, Math.max(0, (progress - config.scrollStart) / (config.scrollEnd - config.scrollStart)));
+      const slot = Math.min(frames.length - 1, Math.floor(sequenceProgress * (frames.length - 1)));
+      if (slot === previousSlot && !force) return;
+      previousSlot = slot;
+      const canvas = canvasRef.current;
+      const currentImg = imagesRef.current[slot];
+      const ctx = canvas?.getContext("2d");
+      if (!canvas || !ctx || !currentImg?.complete || currentImg.naturalWidth === 0) return;
+      if (canvas.width !== currentImg.naturalWidth || canvas.height !== currentImg.naturalHeight) {
         canvas.width = currentImg.naturalWidth;
         canvas.height = currentImg.naturalHeight;
       }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(currentImg, 0, 0);
-    }
-  }, [currentFrameIndex, imagesLoaded, config.mode]);
+    };
+    drawFrameRef.current = drawFrame;
+    const scheduleDraw = () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        drawFrame();
+      });
+    };
+    window.addEventListener("scroll", scheduleDraw, { passive: true });
+    window.addEventListener("resize", scheduleDraw);
+    drawFrame(true);
+    return () => {
+      window.removeEventListener("scroll", scheduleDraw);
+      window.removeEventListener("resize", scheduleDraw);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [config, scrollProgressRef]);
 
   return (
     <div
+      ref={wrapperRef}
       className="absolute pointer-events-none select-none transition-opacity duration-200 ease-out"
       style={{
         zIndex: config.zIndex,
-        top: currentTop,
-        left: currentLeft,
+        top: `${config.initialTop}%`,
+        left: `${config.initialLeft}%`,
         transform: `translate(${config.translateX}, ${config.translateY}) scale(${config.scale})`,
         width: "100%",
         maxWidth: config.maxWidth,
         maxHeight: config.maxHeight,
-        opacity: currentOpacity,
+        opacity: 0,
         filter: config.dropShadow,
-        visibility: currentOpacity <= 0 ? "hidden" : "visible",
+        visibility: "hidden",
         willChange: "top, opacity",
       }}
       aria-hidden="true"

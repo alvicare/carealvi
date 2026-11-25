@@ -100,7 +100,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
       particleCount: 40,
       spread: 60,
       origin: { y: 0.6 },
-      colors: ["#0F766E", "#5B6B7E", "#F59E5B"],
+      colors: ["#0F766E", "#0F766E", "#F59E5B"],
     });
   };
 
@@ -116,15 +116,15 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[540px] max-h-[90vh] overflow-y-auto rounded-[22px] bg-white/95 backdrop-blur-2xl border border-[#DEDEDE] shadow-[0_24px_64px_rgba(0,0,0,0.12)] p-6 sm:p-8 transition-all"
+        className="relative w-full max-w-[540px] max-h-[90vh] overflow-y-auto rounded-[22px] bg-white/95 backdrop-blur-2xl border border-divider shadow-[0_24px_64px_rgba(0,0,0,0.12)] p-6 sm:p-8 transition-all"
         style={{
-          boxShadow: "0 24px 64px -12px rgba(69, 69, 69, 0.18)",
+          boxShadow: "0 24px 64px -12px rgba(15, 118, 110, 0.14)",
         }}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#F3F3F6] hover:bg-[#E8E8ED] text-[#6E6E73] hover:text-[#454545] flex items-center justify-center transition-colors focus:outline-none focus:ring-1 focus:ring-[#BEBEBE]"
+          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-surface hover:bg-brand-pale text-muted hover:text-primary flex items-center justify-center transition-colors focus:outline-none focus:ring-1 focus:ring-numeral"
           aria-label="Close Modal"
         >
           ✕
@@ -139,45 +139,45 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                 alt="AlviCare"
                 className="w-7 h-7 rounded-lg shadow-sm"
               />
-              <span className="font-semibold text-[15px] tracking-tight text-[#1D1D1F]">
+              <span className="font-semibold text-[15px] tracking-tight text-primary">
                 ALVICARE
               </span>
             </div>
 
             {/* Header Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[100px] bg-[#F3F3F6] border border-[#DEDEDE] mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[11px] font-medium tracking-wide text-[#6E6E73] uppercase">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[100px] bg-surface border border-divider mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-teal animate-pulse" />
+              <span className="text-[11px] font-medium tracking-wide text-muted uppercase">
                 Priority Batch 01 Waitlist
               </span>
             </div>
 
             <h3
               id="modal-title"
-              className="text-[26px] font-medium text-[#454545] tracking-tight leading-tight mb-2"
+              className="text-[26px] font-medium text-brand-deep tracking-tight leading-tight mb-2"
             >
               Join the ALVI One Priority Waitlist
             </h3>
 
-            <p className="text-[14px] text-[#6E6E73] leading-relaxed mb-6">
+            <p className="text-[14px] text-muted leading-relaxed mb-6">
               Claim an initial deployment slot for the{" "}
-              <strong className="text-[#454545] font-medium">ALVI One</strong>{" "}
+              <strong className="text-primary font-medium">ALVI One</strong>{" "}
               autonomous home-care companion robot &amp; caregiver mobile app.
             </p>
 
             {/* Live Reservation Counter */}
-            <div className="p-3 rounded-xl bg-[#F8F9FA] border border-[#E8E8ED] flex items-center justify-between mb-6">
+            <div className="p-3 rounded-xl bg-surface border border-brand-pale flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono text-[#BEBEBE] uppercase">
+                <span className="text-[11px] font-mono text-numeral uppercase">
                   Batch Status
                 </span>
-                <span className="text-[12px] font-medium text-[#454545]">
+                <span className="text-[12px] font-medium text-primary">
                   {reservationCount} of 250 claimed
                 </span>
               </div>
-              <div className="w-24 h-1.5 bg-[#E8E8ED] rounded-full overflow-hidden">
+              <div className="w-24 h-1.5 bg-brand-pale rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#5B6B7E] rounded-full transition-all duration-500"
+                  className="h-full bg-brand-teal rounded-full transition-all duration-500"
                   style={{
                     width: `${Math.min(100, (reservationCount / 250) * 100)}%`,
                   }}
@@ -190,7 +190,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               <div>
                 <label
                   htmlFor="caregiverName"
-                  className="block text-[12px] font-medium text-[#454545] uppercase tracking-wider mb-1"
+                  className="block text-[12px] font-medium text-primary uppercase tracking-wider mb-1"
                 >
                   Caregiver Name
                 </label>
@@ -201,7 +201,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Dr. Amodh Gunawardana"
-                  className="w-full h-11 px-3.5 rounded-xl border border-[#DEDEDE] bg-white text-[14px] text-[#454545] placeholder-[#BEBEBE] focus:outline-none focus:border-[#5B6B7E] focus:ring-1 focus:ring-[#5B6B7E] transition-all"
+                  className="w-full h-11 px-3.5 rounded-xl border border-divider bg-white text-[14px] text-primary placeholder-numeral focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal transition-all"
                 />
               </div>
 
@@ -209,7 +209,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                 <div>
                   <label
                     htmlFor="caregiverEmail"
-                    className="block text-[12px] font-medium text-[#454545] uppercase tracking-wider mb-1"
+                    className="block text-[12px] font-medium text-primary uppercase tracking-wider mb-1"
                   >
                     Email Address
                   </label>
@@ -220,19 +220,19 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="amodh@example.com"
-                    className="w-full h-11 px-3.5 rounded-xl border border-[#DEDEDE] bg-white text-[14px] text-[#454545] placeholder-[#BEBEBE] focus:outline-none focus:border-[#5B6B7E] focus:ring-1 focus:ring-[#5B6B7E] transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl border border-divider bg-white text-[14px] text-primary placeholder-numeral focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal transition-all"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="caregiverPhone"
-                    className="block text-[12px] font-medium text-[#454545] uppercase tracking-wider mb-1"
+                    className="block text-[12px] font-medium text-primary uppercase tracking-wider mb-1"
                   >
                     +94 Mobile Number
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[13px] text-[#6E6E73] font-mono">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[13px] text-muted font-mono">
                       +94
                     </span>
                     <input
@@ -242,7 +242,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="77 123 4567"
-                      className="w-full h-11 pl-12 pr-3.5 rounded-xl border border-[#DEDEDE] bg-white text-[14px] text-[#454545] placeholder-[#BEBEBE] focus:outline-none focus:border-[#5B6B7E] focus:ring-1 focus:ring-[#5B6B7E] transition-all font-mono"
+                      className="w-full h-11 pl-12 pr-3.5 rounded-xl border border-divider bg-white text-[14px] text-primary placeholder-numeral focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal transition-all font-mono"
                     />
                   </div>
                 </div>
@@ -252,7 +252,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                 <div>
                   <label
                     htmlFor="caregiverDistrict"
-                    className="block text-[12px] font-medium text-[#454545] uppercase tracking-wider mb-1"
+                    className="block text-[12px] font-medium text-primary uppercase tracking-wider mb-1"
                   >
                     Deployment District
                   </label>
@@ -260,7 +260,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                     id="caregiverDistrict"
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
-                    className="w-full h-11 px-3.5 rounded-xl border border-[#DEDEDE] bg-white text-[14px] text-[#454545] focus:outline-none focus:border-[#5B6B7E] focus:ring-1 focus:ring-[#5B6B7E] transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl border border-divider bg-white text-[14px] text-primary focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal transition-all"
                   >
                     {SRI_LANKA_DISTRICTS.map((d) => (
                       <option key={d} value={d}>
@@ -273,7 +273,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                 <div>
                   <label
                     htmlFor="caregiverRole"
-                    className="block text-[12px] font-medium text-[#454545] uppercase tracking-wider mb-1"
+                    className="block text-[12px] font-medium text-primary uppercase tracking-wider mb-1"
                   >
                     Care Role
                   </label>
@@ -281,7 +281,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                     id="caregiverRole"
                     value={careRole}
                     onChange={(e) => setCareRole(e.target.value)}
-                    className="w-full h-11 px-3.5 rounded-xl border border-[#DEDEDE] bg-white text-[14px] text-[#454545] focus:outline-none focus:border-[#5B6B7E] focus:ring-1 focus:ring-[#5B6B7E] transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl border border-divider bg-white text-[14px] text-primary focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal transition-all"
                   >
                     <option value="Primary Family Caregiver">Primary Family Caregiver</option>
                     <option value="Clinical Physician / Nurse">Clinical Physician / Nurse</option>
@@ -299,15 +299,15 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                     required
                     checked={consent}
                     onChange={(e) => setConsent(e.target.checked)}
-                    className="mt-1 w-4 h-4 rounded border-[#DEDEDE] text-[#5B6B7E] focus:ring-[#5B6B7E]"
+                    className="mt-1 w-4 h-4 rounded border-divider text-brand-teal focus:ring-brand-teal"
                   />
-                  <span className="text-[11px] text-[#6E6E73] leading-relaxed">
+                  <span className="text-[11px] text-muted leading-relaxed">
                     I acknowledge and consent to the edge-encrypted processing of
                     telemetry &amp; medication schedules under the{" "}
-                    <strong className="text-[#454545]">
+                    <strong className="text-primary">
                       Sri Lanka Personal Data Protection Act No. 9 of 2022
                     </strong>{" "}
-                    and <strong className="text-[#454545]">UK GDPR</strong>.
+                    and <strong className="text-primary">UK GDPR</strong>.
                   </span>
                 </label>
               </div>
@@ -316,7 +316,7 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
               <button
                 type="submit"
                 disabled={!consent || submitting}
-                className="w-full h-[46px] rounded-[100px] bg-[#0F766E] hover:bg-[#0D655E] disabled:opacity-50 text-white text-[14px] font-medium tracking-tight transition-all duration-300 transform active:scale-98 shadow-[0_4px_16px_rgba(15,118,110,0.3)] mt-3 flex items-center justify-center gap-2"
+                className="w-full h-[46px] rounded-[100px] bg-brand-teal hover:bg-brand-deep disabled:opacity-50 text-white text-[14px] font-medium tracking-tight transition-all duration-300 transform active:scale-98 shadow-[0_4px_16px_rgba(15,118,110,0.3)] mt-3 flex items-center justify-center gap-2"
               >
                 {submitting ? "Securing Spot & Emailing..." : "Join Priority Waitlist"}
               </button>
@@ -325,41 +325,41 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
         ) : (
           /* Confirmation Success State */
           <div className="text-center py-6">
-            <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto mb-4 text-[24px]">
+            <div className="w-14 h-14 rounded-full bg-brand-pale border border-brand-mint-bright text-brand-teal flex items-center justify-center mx-auto mb-4 text-[24px]">
               ✓
             </div>
 
-            <h3 className="text-[22px] font-medium text-[#454545] tracking-tight mb-2">
+            <h3 className="text-[22px] font-medium text-brand-deep tracking-tight mb-2">
               Waitlist Spot Confirmed
             </h3>
 
-            <p className="text-[14px] text-[#6E6E73] leading-relaxed max-w-[380px] mx-auto mb-4">
-              Thank you, <strong className="text-[#454545]">{name}</strong>. Your priority
+            <p className="text-[14px] text-muted leading-relaxed max-w-[380px] mx-auto mb-4">
+              Thank you, <strong className="text-primary">{name}</strong>. Your priority
               waitlist registration has been secured and an email notification has been dispatched to our engineering team.
             </p>
 
             {/* Pass Card */}
-            <div className="bg-[#F8F9FA] border border-[#E8E8ED] rounded-2xl p-4 text-left max-w-[380px] mx-auto mb-5">
-              <div className="flex justify-between items-center pb-2 border-b border-[#DEDEDE] mb-2">
-                <span className="text-[10px] font-mono text-[#6E6E73] uppercase">
+            <div className="bg-surface border border-brand-pale rounded-2xl p-4 text-left max-w-[380px] mx-auto mb-5">
+              <div className="flex justify-between items-center pb-2 border-b border-divider mb-2">
+                <span className="text-[10px] font-mono text-muted uppercase">
                   Waitlist Pass
                 </span>
-                <span className="text-[12px] font-mono font-semibold text-[#0F766E]">
+                <span className="text-[12px] font-mono font-semibold text-brand-teal">
                   {reservationId}
                 </span>
               </div>
-              <div className="space-y-1.5 text-[11px] text-[#6E6E73]">
+              <div className="space-y-1.5 text-[11px] text-muted">
                 <div className="flex justify-between">
                   <span>Region:</span>
-                  <span className="font-medium text-[#454545]">{district}, Sri Lanka</span>
+                  <span className="font-medium text-primary">{district}, Sri Lanka</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Contact:</span>
-                  <span className="font-medium text-[#454545]">+94 {phone}</span>
+                  <span className="font-medium text-primary">+94 {phone}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Status:</span>
-                  <span className="font-medium text-emerald-600">Dispatched to Team &amp; Email</span>
+                  <span className="font-medium text-brand-teal">Dispatched to Team &amp; Email</span>
                 </div>
               </div>
             </div>
@@ -368,13 +368,13 @@ export function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-[380px] mx-auto">
               <a
                 href={`mailto:alvicarebot@gmail.com?subject=Regarding%20ALVI%20Reservation%20${reservationId}&body=Hello%20ALVI%20Care%20Team%2C%0A%0AMy%20reservation%20ID%20is%20${reservationId}.%20Name%3A%20${encodeURIComponent(name)}.%0A%0A`}
-                className="w-full sm:w-auto h-[40px] px-6 rounded-[100px] border border-[#DEDEDE] hover:bg-[#F3F3F6] text-[#454545] text-[13px] font-medium flex items-center justify-center gap-1.5 transition-colors"
+                className="w-full sm:w-auto h-[40px] px-6 rounded-[100px] border border-divider hover:bg-surface text-primary text-[13px] font-medium flex items-center justify-center gap-1.5 transition-colors"
               >
                 <span>✉ Email Support</span>
               </a>
               <button
                 onClick={onClose}
-                className="w-full sm:w-auto h-[40px] px-8 rounded-[100px] bg-[#454545] hover:bg-[#1D1D1F] text-white text-[13px] font-normal transition-colors"
+                className="w-full sm:w-auto h-[40px] px-8 rounded-[100px] bg-brand-teal hover:bg-brand-deep text-white text-[13px] font-normal transition-colors"
               >
                 Done
               </button>

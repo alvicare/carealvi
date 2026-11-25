@@ -61,12 +61,12 @@ export function VideoModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-5xl rounded-2xl bg-[#0F1115] border border-white/10 shadow-[0_32px_96px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col"
+        className="relative w-full max-w-5xl rounded-2xl bg-brand-dark border border-white/10 shadow-[0_32px_96px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col"
       >
         {/* Modal Top Bar */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 bg-[#14171E]/90 text-white">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 bg-brand-deep/90 text-white">
           <div className="flex items-center gap-3">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="flex h-2 w-2 rounded-full bg-brand-mint animate-pulse" />
             <span
               id="video-modal-title"
               className="text-xs sm:text-sm font-medium tracking-wide text-white/90"
@@ -79,7 +79,7 @@ export function VideoModal({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="p-1.5 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-teal"
             aria-label="Close video dialog"
           >
             <X className="w-5 h-5" />
@@ -101,7 +101,7 @@ export function VideoModal({
         </div>
 
         {/* Video Caption & Engineering Summary */}
-        <div className="p-4 sm:p-5 bg-[#14171E] border-t border-white/10 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="p-4 sm:p-5 bg-brand-deep border-t border-white/10 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <p className="text-xs sm:text-sm text-white/80 font-normal">
               Autonomous Living & Vitality Intelligence (ALVI One) — 4-Tier Cyber-Physical Companion Robot & Caregiver Ecosystem.

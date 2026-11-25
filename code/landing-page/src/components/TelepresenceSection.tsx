@@ -93,10 +93,19 @@ export function TelepresenceSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const drawCurrentFrameRef = useRef<() => void>(() => {});
 
   const [scrollProgress, setScrollProgress] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const updateMobile = () => setIsMobile(window.innerWidth < 768);
+    updateMobile();
+    window.addEventListener("resize", updateMobile);
+    return () => window.removeEventListener("resize", updateMobile);
+  }, []);
 
   // 1. Reduced motion & scroll listener
   useEffect(() => {
@@ -144,34 +153,49 @@ export function TelepresenceSection() {
     };
   }, []);
 
-  // 2. Preload transparent WebP frame sequence
+  // 2. Load frame zero immediately and defer the rest until the section is near.
   useEffect(() => {
     let isCancelled = false;
-    const images: HTMLImageElement[] = [];
-    let loadedCount = 0;
+    let remainingLoaded = false;
+    const frameNumbers = Array.from({ length: BOT_CONFIG.totalFrames }, (_, i) => i)
+      .filter((index) => !isMobile || index % 2 === 0);
+    if (frameNumbers[frameNumbers.length - 1] !== BOT_CONFIG.totalFrames - 1) {
+      frameNumbers.push(BOT_CONFIG.totalFrames - 1);
+    }
+    const images: HTMLImageElement[] = new Array(frameNumbers.length);
 
-    for (let i = 1; i <= BOT_CONFIG.totalFrames; i++) {
+    const loadFrame = (slot: number) => {
+      if (isCancelled || images[slot]) return;
       const img = new Image();
-      const frameNum = String(i).padStart(4, "0");
+      const frameNum = String(frameNumbers[slot] + 1).padStart(4, "0");
       img.src = `${BOT_CONFIG.framesBaseUrl}${frameNum}.webp`;
 
       img.onload = () => {
         if (isCancelled) return;
-        loadedCount++;
-        if (loadedCount >= 10) {
+        if (slot === 0) {
           setImagesLoaded(true);
         }
+        drawCurrentFrameRef.current();
       };
-
-      images.push(img);
-    }
-
+      images[slot] = img;
+    };
     imagesRef.current = images;
+    loadFrame(0);
+
+    const observer = new IntersectionObserver((entries) => {
+      if (remainingLoaded || !entries.some((entry) => entry.isIntersecting)) return;
+      remainingLoaded = true;
+      for (let slot = 1; slot < frameNumbers.length; slot++) loadFrame(slot);
+      observer.disconnect();
+    }, { rootMargin: "100% 0px" });
+    if (containerRef.current) observer.observe(containerRef.current);
 
     return () => {
       isCancelled = true;
+      observer.disconnect();
+      imagesRef.current = [];
     };
-  }, []);
+  }, [isMobile]);
 
   // 3. Phase Calculations
   // Phase 1 (0.00 -> 0.40): Statement view with word-by-word bold/light-up scroll reveal
@@ -281,14 +305,17 @@ export function TelepresenceSection() {
 
   // Frame calculation (1 to 239)
   const currentFrameIndex = useMemo(() => {
+    const frameCount = isMobile
+      ? Math.ceil(BOT_CONFIG.totalFrames / 2) + (BOT_CONFIG.totalFrames % 2 === 0 ? 1 : 0)
+      : BOT_CONFIG.totalFrames;
     return Math.min(
-      BOT_CONFIG.totalFrames - 1,
-      Math.max(0, Math.floor(scrubProgress * (BOT_CONFIG.totalFrames - 1)))
+      frameCount - 1,
+      Math.max(0, Math.floor(scrubProgress * (frameCount - 1)))
     );
-  }, [scrubProgress]);
+  }, [scrubProgress, isMobile]);
 
   // 4. Render to Canvas with Retina DPR
-  useEffect(() => {
+  const drawCurrentFrame = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -333,6 +360,11 @@ export function TelepresenceSection() {
       ctx.drawImage(currentImg, offsetX, offsetY, drawWidth, drawHeight);
       ctx.restore();
     }
+  };
+  drawCurrentFrameRef.current = drawCurrentFrame;
+
+  useEffect(() => {
+    drawCurrentFrame();
   }, [currentFrameIndex, imagesLoaded]);
 
   return (
@@ -340,12 +372,12 @@ export function TelepresenceSection() {
       id="telepresence"
       ref={containerRef}
       className={`relative w-full ${
-        prefersReducedMotion ? "h-auto py-24" : "h-[450vh]"
-      } bg-[#111113] text-white selection:bg-white/20`}
+        prefersReducedMotion ? "h-auto py-24" : "h-[260vh] md:h-[450vh]"
+      } bg-brand-dark text-white selection:bg-white/20`}
       aria-label="ALVICARE Telepresence and Expressive Interface"
     >
       {/* Sticky Full-Viewport Stage */}
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex flex-col items-center justify-center px-6 sm:px-12 md:px-16 lg:px-24">
+      <div className="sticky top-0 left-0 w-full h-[100svh] overflow-hidden flex flex-col items-center justify-center px-6 sm:px-12 md:px-16 lg:px-24">
 
         {/* ============================================================== */}
         {/* PHASE 1: Extra-Large Word-by-Word Scroll Reveal Statement      */}
@@ -406,7 +438,7 @@ export function TelepresenceSection() {
                     className="inline-block mx-[0.14em] transition-all duration-150"
                     style={{
                       opacity,
-                      color: isBold ? "#FFFFFF" : "#8E8E93",
+                      color: isBold ? "#FFFFFF" : "rgba(255, 255, 255, 0.68)",
                       fontWeight: isBold ? 500 : 300,
                     }}
                   >
@@ -418,10 +450,10 @@ export function TelepresenceSection() {
 
             {/* Subtle Scroll Hint */}
             <div className="flex flex-col items-center gap-2 mt-12 opacity-60">
-              <span className="text-[11px] font-mono tracking-widest text-[#8E8E93] uppercase">
+              <span className="text-[11px] font-mono tracking-widest text-white/70 uppercase">
                 Scroll to explore
               </span>
-              <div className="w-[1px] h-6 bg-gradient-to-b from-[#8E8E93] to-transparent animate-pulse" />
+              <div className="w-[1px] h-6 bg-gradient-to-b from-white/70 to-transparent animate-pulse" />
             </div>
 
           </div>
@@ -439,7 +471,7 @@ export function TelepresenceSection() {
           }}
         >
           {/* Ambient Radial Backlight behind Robot */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[480px] rounded-full bg-gradient-to-tr from-[#5B6B7E]/25 via-[#3A4553]/18 to-transparent blur-[140px] pointer-events-none -z-10" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[480px] rounded-full bg-gradient-to-tr from-brand-teal/25 via-brand-mint/15 to-transparent blur-[140px] pointer-events-none -z-10" />
 
           {/* Centered Robot Head Hardware Display */}
           <div className="relative w-full max-w-[760px] aspect-[16/10] sm:aspect-[16/9] flex items-center justify-center my-auto">
@@ -536,7 +568,7 @@ export function TelepresenceSection() {
                           ? "#FFFFFF"
                           : isBold
                           ? "#FFFFFF"
-                          : "#8E8E93",
+                          : "rgba(255, 255, 255, 0.68)",
                         fontWeight: prefersReducedMotion
                           ? 400
                           : isBold

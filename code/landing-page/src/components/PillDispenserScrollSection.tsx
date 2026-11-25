@@ -52,16 +52,25 @@ export function PillDispenserScrollSection() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const drawCurrentFrameRef = useRef<() => void>(() => {});
 
   const [scrollProgress, setScrollProgress] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Live on-screen adjustable values so user can change and test in real-time
   const [offsetX, setOffsetX] = useState(PILL_CONFIG.offsetX);
   const [scale, setScale] = useState(PILL_CONFIG.scale);
   const [blurLeft, setBlurLeft] = useState(PILL_CONFIG.blurOverlayLeftPercent);
   const [showControls, setShowControls] = useState(false);
+
+  useEffect(() => {
+    const updateMobile = () => setIsMobile(window.innerWidth < 768);
+    updateMobile();
+    window.addEventListener("resize", updateMobile);
+    return () => window.removeEventListener("resize", updateMobile);
+  }, []);
 
   // 1. Scroll listener matching StatementSection:
   // - When rect.top > 0, section is still entering from below -> progress stays strictly 0
@@ -125,55 +134,74 @@ export function PillDispenserScrollSection() {
     };
   }, []);
 
-  // 2. Preload frame sequence
+  // 2. Load frame zero immediately and defer the rest until the section is near.
   useEffect(() => {
     if (PILL_CONFIG.mode === "video") return;
 
     let isCancelled = false;
-    const images: HTMLImageElement[] = [];
-    let loadedCount = 0;
+    let remainingLoaded = false;
 
     const baseUrl =
       PILL_CONFIG.mode === "raw_frames"
         ? PILL_CONFIG.rawFramesBaseUrl
         : PILL_CONFIG.customFramesBaseUrl;
 
-    for (let i = 1; i <= PILL_CONFIG.totalFrames; i++) {
+    const frameNumbers = Array.from({ length: PILL_CONFIG.totalFrames }, (_, i) => i)
+      .filter((index) => !isMobile || index % 2 === 0);
+    if (frameNumbers[frameNumbers.length - 1] !== PILL_CONFIG.totalFrames - 1) {
+      frameNumbers.push(PILL_CONFIG.totalFrames - 1);
+    }
+    const images: HTMLImageElement[] = new Array(frameNumbers.length);
+
+    const loadFrame = (slot: number) => {
+      if (isCancelled || images[slot]) return;
       const img = new Image();
-      const frameNum = String(i).padStart(4, "0");
+      const frameNum = String(frameNumbers[slot] + 1).padStart(4, "0");
       img.src = `${baseUrl}${frameNum}.webp`;
 
       img.onload = () => {
         if (isCancelled) return;
-        loadedCount++;
-        if (loadedCount >= 1) {
+        if (slot === 0) {
           setImagesLoaded(true);
         }
+        drawCurrentFrameRef.current();
       };
-
-      images.push(img);
-    }
-
+      images[slot] = img;
+    };
     imagesRef.current = images;
+    loadFrame(0);
+
+    const observer = new IntersectionObserver((entries) => {
+      if (remainingLoaded || !entries.some((entry) => entry.isIntersecting)) return;
+      remainingLoaded = true;
+      for (let slot = 1; slot < frameNumbers.length; slot++) loadFrame(slot);
+      observer.disconnect();
+    }, { rootMargin: "100% 0px" });
+    if (containerRef.current) observer.observe(containerRef.current);
 
     return () => {
       isCancelled = true;
+      observer.disconnect();
+      imagesRef.current = [];
     };
-  }, []);
+  }, [isMobile]);
 
   // 3. Compute active frame index (0..70)
   const currentFrameIndex = useMemo(() => {
+    const frameCount = isMobile
+      ? Math.ceil(PILL_CONFIG.totalFrames / 2) + (PILL_CONFIG.totalFrames % 2 === 0 ? 1 : 0)
+      : PILL_CONFIG.totalFrames;
     return Math.min(
-      PILL_CONFIG.totalFrames - 1,
+      frameCount - 1,
       Math.max(
         0,
-        Math.floor(scrollProgress * (PILL_CONFIG.totalFrames - 1))
+        Math.floor(scrollProgress * (frameCount - 1))
       )
     );
-  }, [scrollProgress]);
+  }, [scrollProgress, isMobile]);
 
   // 4. Render to Canvas: Height of frame equals height of section!
-  useEffect(() => {
+  const drawCurrentFrame = () => {
     if (PILL_CONFIG.mode === "video") return;
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -210,6 +238,11 @@ export function PillDispenserScrollSection() {
       ctx.drawImage(currentImg, x, y, drawWidth, drawHeight);
       ctx.restore();
     }
+  };
+  drawCurrentFrameRef.current = drawCurrentFrame;
+
+  useEffect(() => {
+    drawCurrentFrame();
   }, [currentFrameIndex, imagesLoaded, offsetX, scale]);
 
   // 5. Video scrubbing handler if video mode is chosen
@@ -225,12 +258,12 @@ export function PillDispenserScrollSection() {
     <section
       ref={containerRef}
       className={`relative w-full ${
-        prefersReducedMotion ? "h-auto py-24" : "h-[280vh]"
+        prefersReducedMotion ? "h-auto py-24" : "h-[220vh] md:h-[280vh]"
       } bg-white`}
       aria-label="ALVICARE Pill Dispensing Feature"
     >
       {/* Sticky Full-Viewport Stage: Height matches 100vh */}
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden bg-white flex items-center justify-between">
+      <div className="sticky top-0 left-0 w-full h-[100svh] overflow-hidden bg-white flex items-center justify-between">
         
         {/* Full-Height Canvas Stage spanning section height */}
         <div className="absolute inset-0 w-full h-full pointer-events-none">
@@ -282,7 +315,7 @@ export function PillDispenserScrollSection() {
           <div className="w-full max-w-[500px] pointer-events-auto">
             {/* Title: 51px/400 weight matching Airform "Just add water." */}
             <h2
-              className="font-normal text-[#454545] mb-4 tracking-[-0.015em]"
+              className="font-normal text-brand-deep mb-4 tracking-[-0.015em]"
               style={{
                 fontSize: "clamp(36px, 4.2vw, 54px)",
                 lineHeight: 1.1,
@@ -292,7 +325,7 @@ export function PillDispenserScrollSection() {
             </h2>
 
             {/* Subtitle: 16-17px clean muted grotesk */}
-            <p className="text-[16px] sm:text-[17px] text-[#6E6E73] font-normal leading-[1.6] max-w-[460px]">
+            <p className="text-[16px] sm:text-[17px] text-muted font-normal leading-[1.6] max-w-[460px]">
               {PILL_CONFIG.subline}
             </p>
           </div>

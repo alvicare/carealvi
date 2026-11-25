@@ -549,7 +549,7 @@ const BadgeFaces = React.memo(function BadgeFaces({
           {item.role}
         </span>
         {item.team && (
-          <span className="mt-[0.38em] block w-full text-center text-[0.58em] font-medium uppercase tracking-[0.18em] text-[#5B6B7E] truncate px-1">
+          <span className="mt-[0.38em] block w-full text-center text-[0.58em] font-medium uppercase tracking-[0.18em] text-brand-teal truncate px-1">
             {item.team}
           </span>
         )}
@@ -1444,7 +1444,7 @@ export function TeamSection({
       data-mode={size.carousel ? "carousel" : "rail"}
       data-active={active ?? ""}
       data-flipped={flipped ?? ""}
-      className={`relative isolate w-full overflow-hidden bg-[#F3F3F6] border-t border-[#DEDEDE] pt-28 pb-16 text-foreground ${
+      className={`relative isolate w-full overflow-hidden bg-surface border-t border-divider pt-28 pb-16 text-foreground ${
         className ?? ""
       }`}
       aria-label="Core Engineering Team"
@@ -1471,25 +1471,25 @@ export function TeamSection({
       />
 
       <header className="relative z-10 flex flex-col items-center gap-3 px-6 text-center max-w-[860px] mx-auto mb-6">
-        <span className="text-[11px] font-mono tracking-widest text-[#5B6B7E] uppercase block">
+        <span className="text-[11px] font-mono tracking-widest text-brand-teal uppercase block">
           INFORMATICS INSTITUTE OF TECHNOLOGY &middot; UNIVERSITY OF WESTMINSTER
         </span>
         <h2
-          className="text-balance font-normal tracking-[-0.015em] text-[#454545]"
+          className="text-balance font-normal tracking-[-0.015em] text-brand-deep"
           style={{ fontSize: "clamp(34px, 4.2vw, 52px)", lineHeight: 1.1 }}
         >
           Engineered by Team 43.
         </h2>
-        <p className="text-[15px] sm:text-[16px] text-[#6E6E73] leading-[1.6] max-w-[660px] font-normal">
+        <p className="text-[15px] sm:text-[16px] text-muted leading-[1.6] max-w-[660px] font-normal">
           The multidisciplinary engineering team behind ALVI (Autonomous Living &amp; Vitality Intelligence) &mdash; an autonomous home-care companion robot and caregiver mobile ecosystem.
         </p>
 
         {/* Official Team 43 Launch Video Preview Card */}
-        <div className="w-full max-w-[640px] mt-4 p-2.5 sm:p-3 rounded-2xl bg-white/90 border border-[#DEDEDE] shadow-[0_12px_40px_rgba(0,0,0,0.06)] backdrop-blur-md">
+        <div className="w-full max-w-[640px] mt-4 p-2.5 sm:p-3 rounded-2xl bg-white/90 border border-divider shadow-[0_12px_40px_rgba(0,0,0,0.06)] backdrop-blur-md">
           <button
             type="button"
             onClick={() => setIsVideoOpen(true)}
-            className="group relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-black flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#0F766E]"
+            className="group relative w-full aspect-[16/9] rounded-xl overflow-hidden bg-black flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-teal"
             aria-label="Play Team 43 Official Launch Video"
           >
             <img
@@ -1500,8 +1500,8 @@ export function TeamSection({
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/35" />
             
             {/* Play Button Icon */}
-            <div className="relative z-10 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/95 text-[#0F766E] shadow-2xl group-hover:scale-110 group-hover:bg-white transition-all duration-300">
-              <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-current ml-1 text-[#0F766E]" />
+            <div className="relative z-10 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/95 text-brand-teal shadow-2xl group-hover:scale-110 group-hover:bg-white transition-all duration-300">
+              <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-current ml-1 text-brand-teal" />
             </div>
 
             {/* Badges Overlay */}
@@ -1509,7 +1509,7 @@ export function TeamSection({
               <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-black/60 text-white backdrop-blur-md border border-white/20">
                 Official Launch Film
               </span>
-              <span className="px-2 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-emerald-500/85 text-white backdrop-blur-md font-semibold">
+              <span className="px-2 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-brand-teal/85 text-white backdrop-blur-md font-semibold">
                 1080p60 · 41s
               </span>
             </div>
@@ -1952,8 +1952,8 @@ export function TeamSection({
 
       <div className="relative z-10 flex flex-col items-center gap-2 px-6 pb-6 pt-3 text-center">
         <div className="min-h-[2.6rem]">
-          <p className="text-[15px] font-medium text-[#454545]">{line1}</p>
-          <p className="mt-0.5 text-[13px] text-[#6E6E73]">{line2}</p>
+          <p className="text-[15px] font-medium text-primary">{line1}</p>
+          <p className="mt-0.5 text-[13px] text-muted">{line2}</p>
           {showingBack && person?.bio && (
             <span className="sr-only">{person.bio}</span>
           )}
@@ -1978,7 +1978,7 @@ export const ALVICARE_TEAM_MEMBERS: LanyardMember[] = [
     name: "Amodh (Kalindu) Gunawardana",
     role: "Product Owner & Tech Architect",
     team: "Team 43 · Voice AI & Vision Pipeline Lead",
-    image: "/images/amodh.jpeg",
+    image: "/images/team-43/amodh.png",
     bio: "Owns the Product Backlog, 3D landing page, MediaPipe 1.5s hand-to-mouth intake AI, Conversational Voice AI, and PDPA/GDPR Consent Governance (w2213308 / 20251407).",
     tags: ["Product Owner", "System Architecture", "Voice AI & Vision"],
     links: [
@@ -1993,7 +1993,7 @@ export const ALVICARE_TEAM_MEMBERS: LanyardMember[] = [
     name: "Thisara Chandima",
     role: "Embedded Hardware & Robotics Lead",
     team: "Team 43 · ESP32-S3 Firmware & BOM",
-    image: "/images/thisara.jpeg",
+    image: "/images/team-43/thisara.png",
     bio: "Defined 4-tier hardware architecture, ESP32-S3 FreeRTOS firmware, BTS7960 500ms watchdog braking, 4x VL53L1X ToF laser navigation, and Sri Lanka BOM (w2212870 / 20251270).",
     tags: ["ESP32-S3 FreeRTOS", "VL53L1X ToF", "Hardware BOM"],
     links: [
@@ -2009,7 +2009,7 @@ export const ALVICARE_TEAM_MEMBERS: LanyardMember[] = [
     name: "Thevindu Herath",
     role: "Lead UI/UX Designer & System Architect",
     team: "Team 43 · Caregiver Front-End Lead",
-    image: "/images/thevindu.jpeg",
+    image: "/images/team-43/thevindu.png",
     bio: "Architected 64-screen interactive Figma prototype, 60-30-10 design system, WCAG 2.2 AA accessibility overlays, and Caregiver Mobile UI (w2212837 / 20250377).",
     tags: ["Figma High-Fi", "Caregiver UI", "Tailwind Design"],
     links: [
@@ -2024,7 +2024,7 @@ export const ALVICARE_TEAM_MEMBERS: LanyardMember[] = [
     name: "Sithil Hettiarachchi",
     role: "Core Cloud Backend & UML Systems Lead",
     team: "Team 43 · UML Architecture",
-    image: "/images/sithil.jpeg",
+    image: "/images/team-43/sithil.png",
     bio: "Designed UML Use Case, Class, Sequence, and Activity models, SSM Rich Picture, Business Model Canvas, and Doctor SLMC verification state integration (w2212867 / 20251350).",
     tags: ["UML Systems Modeling", "Cloud Backend", "Spring Boot"],
     links: [
@@ -2040,8 +2040,7 @@ export const ALVICARE_TEAM_MEMBERS: LanyardMember[] = [
     name: "Nethum Liyanage",
     role: "Scrum Master & Master Documentation Lead",
     team: "Team 43 · SLEP & Test Strategy Lead",
-    image:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=faces&q=80",
+    image: "/images/team-43/nethum.png",
     bio: "Administers Atlassian Jira Cloud (SCRUM board), monitors velocity & burndown charts, secured UoW Ethics Clearance Ref #CS-43-2026, and authored 4-level test strategy (w2212876 / 20250172).",
     tags: ["Scrum Master", "Jira Admin", "Ethics & QA Strategy"],
     links: [

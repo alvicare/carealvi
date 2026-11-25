@@ -117,11 +117,11 @@ export function WelcomeAudio() {
       <button
         onClick={playSound}
         title="Replay Welcome Greeting"
-        className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#111113]/85 text-white/80 hover:text-white border border-white/15 backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200 hover:scale-105 active:scale-95 text-[11px] font-mono tracking-wide"
+        className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-brand-deep/90 text-white/80 hover:text-white border border-white/15 backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] transition-all duration-200 hover:scale-105 active:scale-95 text-[11px] font-mono tracking-wide"
       >
         <span className="flex items-center gap-[2px] h-3 w-3.5">
           <span
-            className={`w-[2.5px] bg-[#5B6B7E] rounded-full transition-all duration-200 ${
+            className={`w-[2.5px] bg-brand-teal rounded-full transition-all duration-200 ${
               isPlaying ? "h-3 animate-pulse" : "h-1.5"
             }`}
           />
@@ -133,7 +133,7 @@ export function WelcomeAudio() {
             }`}
           />
           <span
-            className={`w-[2.5px] bg-[#5B6B7E] rounded-full transition-all duration-200 ${
+            className={`w-[2.5px] bg-brand-teal rounded-full transition-all duration-200 ${
               isPlaying ? "h-3 animate-pulse delay-150" : "h-1"
             }`}
           />

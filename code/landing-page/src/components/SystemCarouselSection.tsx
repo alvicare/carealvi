@@ -83,7 +83,7 @@ export function SystemCarouselSection() {
       {/* 1. Centered Section Header */}
       <div className="max-w-[760px] mx-auto text-center px-6 mb-16 sm:mb-20">
         <h2
-          className="font-normal text-[#454545] mb-4 tracking-[-0.01em]"
+          className="font-normal text-brand-deep mb-4 tracking-[-0.01em]"
           style={{
             fontSize: "clamp(34px, 4vw, 51px)",
             lineHeight: 1.1,
@@ -91,7 +91,7 @@ export function SystemCarouselSection() {
         >
           One system, two parts.
         </h2>
-        <p className="text-[15px] text-[#6E6E73] leading-[1.5] max-w-[540px] mx-auto font-normal">
+        <p className="text-[15px] text-muted leading-[1.5] max-w-[540px] mx-auto font-normal">
           An indoor companion robot that blends into the home. A caregiver web app
           and smartwatch link that quietly watch over every moment. Both built to
           work seamlessly together.
@@ -118,7 +118,7 @@ export function SystemCarouselSection() {
           {cards.map((card) => (
             <div
               key={card.id}
-              className="relative flex-shrink-0 w-[85vw] sm:w-[540px] md:w-[620px] h-[340px] sm:h-[420px] rounded-[32px] overflow-hidden border border-[#DEDEDE] bg-[#F8F9FA] group snap-start transition-all duration-500 hover:shadow-xl"
+              className="relative flex-shrink-0 w-[85vw] sm:w-[540px] md:w-[620px] h-[340px] sm:h-[420px] rounded-[32px] overflow-hidden border border-divider bg-surface group snap-start transition-all duration-500 hover:shadow-xl"
             >
               {/* Background Architectural Image */}
               <div className="absolute inset-0">
@@ -136,13 +136,13 @@ export function SystemCarouselSection() {
               {/* Minimal Whisper-Quiet Bottom Pill Caption */}
               <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between z-10 pointer-events-none">
                 <div className="bg-white/92 backdrop-blur-md px-4 py-2 rounded-full border border-white/70 shadow-sm flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5B6B7E]" />
-                  <span className="text-[13px] font-medium text-[#454545]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-teal" />
+                  <span className="text-[13px] font-medium text-primary">
                     {card.title}
                   </span>
                 </div>
                 {card.location && (
-                  <span className="text-[11px] font-mono text-[#6E6E73] bg-white/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/70">
+                  <span className="text-[11px] font-mono text-muted bg-white/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/70">
                     {card.location}
                   </span>
                 )}
@@ -156,10 +156,10 @@ export function SystemCarouselSection() {
       <div className="max-w-[1240px] mx-auto px-6 mt-10">
         <div className="relative w-full flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[#DEDEDE]" />
+            <div className="w-full border-t border-divider" />
           </div>
           <div className="relative bg-white px-4">
-            <span className="text-[12px] text-[#6E6E73] font-normal tracking-wide">
+            <span className="text-[12px] text-muted font-normal tracking-wide">
               Scroll or drag to view more
             </span>
           </div>
@@ -170,15 +170,15 @@ export function SystemCarouselSection() {
       <div className="max-w-[1240px] mx-auto px-6 sm:px-10 mt-20 sm:mt-24">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
           {/* Column 01 */}
-          <div className="pt-6 border-t border-[#DEDEDE]">
-            <span className="text-[40px] font-light text-[#BEBEBE] leading-none block mb-4">
+          <div className="pt-6 border-t border-divider">
+            <span className="text-[40px] font-light text-numeral leading-none block mb-4">
               01
             </span>
-            <h3 className="text-[22px] font-light text-[#454545] leading-[1.25] mb-3">
+            <h3 className="text-[22px] font-light text-brand-deep leading-[1.25] mb-3">
               Architectural <br />
               by design.
             </h3>
-            <p className="text-[14px] text-[#6E6E73] leading-[1.6]">
+            <p className="text-[14px] text-muted leading-[1.6]">
               Crafted to architectural standards. With a refined brushed-aluminium
               form, a 5-cylinder medicine carousel, and an integrated water bottle
               holder that complement the spaces they inhabit, rather than compete
@@ -187,15 +187,15 @@ export function SystemCarouselSection() {
           </div>
 
           {/* Column 02 */}
-          <div className="pt-6 border-t border-[#DEDEDE]">
-            <span className="text-[40px] font-light text-[#BEBEBE] leading-none block mb-4">
+          <div className="pt-6 border-t border-divider">
+            <span className="text-[40px] font-light text-numeral leading-none block mb-4">
               02
             </span>
-            <h3 className="text-[22px] font-light text-[#454545] leading-[1.25] mb-3">
+            <h3 className="text-[22px] font-light text-brand-deep leading-[1.25] mb-3">
               Effortless care. <br />
               Every dose.
             </h3>
-            <p className="text-[14px] text-[#6E6E73] leading-[1.6]">
+            <p className="text-[14px] text-muted leading-[1.6]">
               No complex routines, no missed schedules. ALVI navigates from room to
               room via 4x solid-state ToF laser rangefinders and verifies every dose via
               contactless MLX90614 palm thermopile sensing and IR break-beam verification.
@@ -203,15 +203,15 @@ export function SystemCarouselSection() {
           </div>
 
           {/* Column 03 */}
-          <div className="pt-6 border-t border-[#DEDEDE]">
-            <span className="text-[40px] font-light text-[#BEBEBE] leading-none block mb-4">
+          <div className="pt-6 border-t border-divider">
+            <span className="text-[40px] font-light text-numeral leading-none block mb-4">
               03
             </span>
-            <h3 className="text-[22px] font-light text-[#454545] leading-[1.25] mb-3">
+            <h3 className="text-[22px] font-light text-brand-deep leading-[1.25] mb-3">
               Instant peace of mind <br />
               between homes.
             </h3>
-            <p className="text-[14px] text-[#6E6E73] leading-[1.6]">
+            <p className="text-[14px] text-muted leading-[1.6]">
               Continuous smartwatch heart-rate telemetry, contactless MLX90614
               temperature checks, dual-confirmed fall detection, and instant 720p
               WebRTC family calling keep you connected to your parents from anywhere.

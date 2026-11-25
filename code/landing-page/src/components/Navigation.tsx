@@ -29,23 +29,23 @@ export function Navigation({
           aria-label="ALVICARE Home"
         >
           <AlviCareLogo className="w-7 h-7 rounded-lg shadow-[0_2px_8px_rgba(15,118,110,0.22)] transition-transform duration-500 group-hover:scale-105" />
-          <span className="font-semibold text-[15px] tracking-tight text-[#1D1D1F]">ALVICARE</span>
+          <span className="font-semibold text-[15px] tracking-tight text-primary">ALVICARE</span>
         </a>
 
         {/* Minimal Language Selector */}
         <div className="relative">
           <button
             onClick={() => setLangOpen(!langOpen)}
-            className="text-[13px] text-[#6E6E73] hover:text-[#454545] font-normal tracking-tight flex items-center gap-1 transition-colors px-1 py-1 rounded-md focus:outline-none focus:ring-1 focus:ring-[#BEBEBE]"
+            className="text-[13px] text-muted hover:text-primary font-normal tracking-tight flex items-center gap-1 transition-colors px-1 py-1 rounded-md focus:outline-none focus:ring-1 focus:ring-numeral"
             aria-label="Select Language"
             aria-expanded={langOpen}
           >
             <span>{selectedLang}</span>
-            <span className="text-[10px] text-[#BEBEBE] mt-[1px]">⌄</span>
+            <span className="text-[10px] text-numeral mt-[1px]">⌄</span>
           </button>
 
           {langOpen && (
-            <div className="absolute top-8 left-0 w-24 py-1.5 bg-white/95 backdrop-blur-xl border border-[#DEDEDE] rounded-xl shadow-lg z-50 flex flex-col">
+            <div className="absolute top-8 left-0 w-24 py-1.5 bg-white/95 backdrop-blur-xl border border-divider rounded-xl shadow-lg z-50 flex flex-col">
               {["EN", "SIN", "TA"].map((lang) => (
                 <button
                   key={lang}
@@ -55,8 +55,8 @@ export function Navigation({
                   }}
                   className={`px-3 py-1 text-[12px] text-left transition-colors ${
                     selectedLang === lang
-                      ? "text-[#454545] font-medium bg-[#F3F3F6]"
-                      : "text-[#6E6E73] hover:text-[#454545] hover:bg-[#F8F9FA]"
+                      ? "text-primary font-medium bg-surface"
+                      : "text-muted hover:text-primary hover:bg-surface"
                   }`}
                 >
                   {lang === "EN" ? "English" : lang === "SIN" ? "සිංහල" : "தமிழ்"}
@@ -72,7 +72,7 @@ export function Navigation({
         <nav
           className="flex items-center p-[4px] rounded-[100px] border border-[rgba(222,222,222,0.6)] shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
           style={{
-            backgroundColor: "rgba(232, 232, 237, 0.72)",
+            backgroundColor: "rgba(234, 241, 239, 0.82)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
           }}
@@ -82,8 +82,8 @@ export function Navigation({
             onClick={() => onSegmentChange("home-care")}
             className={`px-4 py-1.5 rounded-[100px] text-[13px] font-normal transition-all duration-300 ${
               activeSegment === "home-care"
-                ? "bg-white text-[#454545] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-                : "text-[#6E6E73] hover:text-[#454545]"
+                ? "bg-white text-primary shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                : "text-muted hover:text-primary"
             }`}
           >
             Home Care
@@ -92,8 +92,8 @@ export function Navigation({
             onClick={() => onSegmentChange("caregiver-app")}
             className={`px-4 py-1.5 rounded-[100px] text-[13px] font-normal transition-all duration-300 ${
               activeSegment === "caregiver-app"
-                ? "bg-white text-[#454545] shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
-                : "text-[#6E6E73] hover:text-[#454545]"
+                ? "bg-white text-primary shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                : "text-muted hover:text-primary"
             }`}
           >
             Caregiver App
@@ -106,16 +106,16 @@ export function Navigation({
         {onOpenVideo && (
           <button
             onClick={onOpenVideo}
-            className="hidden md:inline-flex items-center gap-1.5 h-[32px] px-3.5 rounded-[100px] border border-[#DEDEDE] bg-white/80 hover:bg-white text-[#454545] text-[13px] font-normal tracking-tight transition-all duration-200 backdrop-blur-md"
+            className="hidden md:inline-flex items-center gap-1.5 h-[32px] px-3.5 rounded-[100px] border border-divider bg-white/80 hover:bg-white text-primary text-[13px] font-normal tracking-tight transition-all duration-200 backdrop-blur-md"
             aria-label="Watch ALVI One Launch Film"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-teal animate-pulse" />
             Watch Film (41s)
           </button>
         )}
         <button
           onClick={onOpenWaitlist}
-          className="h-[32px] px-4 rounded-[100px] bg-[#0F766E] hover:bg-[#0D655E] text-white text-[13px] font-medium tracking-tight transition-all duration-300 transform active:scale-95 shadow-[0_2px_8px_rgba(15,118,110,0.25)]"
+          className="h-[32px] px-4 rounded-[100px] bg-brand-teal hover:bg-brand-deep text-white text-[13px] font-medium tracking-tight transition-all duration-300 transform active:scale-95 shadow-[0_2px_8px_rgba(15,118,110,0.25)]"
         >
           Join Waitlist
         </button>

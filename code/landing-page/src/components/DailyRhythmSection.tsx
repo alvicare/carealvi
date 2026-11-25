@@ -33,17 +33,17 @@ export function DailyRhythmSection() {
   return (
     <section
       id="daily-rhythm"
-      className="w-full py-28 sm:py-36 bg-white border-t border-[#DEDEDE]"
+      className="w-full py-28 sm:py-36 bg-white border-t border-divider"
       aria-label="24-Hour Daily Rhythm"
     >
       <div className="max-w-[1240px] mx-auto px-6 sm:px-12 md:px-16">
         {/* Section Header */}
         <div className="max-w-[720px] mb-16 sm:mb-20">
-          <span className="text-[11px] font-mono tracking-widest text-[#5B6B7E] uppercase block mb-3">
+          <span className="text-[11px] font-mono tracking-widest text-brand-teal uppercase block mb-3">
             DAILY TIMELINE
           </span>
           <h2
-            className="font-normal text-[#454545] tracking-[-0.01em] mb-4"
+            className="font-normal text-brand-deep tracking-[-0.01em] mb-4"
             style={{
               fontSize: "clamp(34px, 4vw, 51px)",
               lineHeight: 1.1,
@@ -51,7 +51,7 @@ export function DailyRhythmSection() {
           >
             Effortless days. Peaceful nights.
           </h2>
-          <p className="text-[15px] sm:text-[16px] text-[#6E6E73] leading-[1.5] font-normal">
+          <p className="text-[15px] sm:text-[16px] text-muted leading-[1.5] font-normal">
             ALVI operates on a predictable, comforting rhythm designed around your
             parents&apos; habits. No screens to navigate, no buttons to memorize.
           </p>
@@ -62,21 +62,21 @@ export function DailyRhythmSection() {
           {steps.map((step) => (
             <div
               key={step.time}
-              className="pt-6 border-t border-[#DEDEDE] flex flex-col justify-between"
+              className="pt-6 border-t border-divider flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-baseline justify-between mb-3">
-                  <span className="text-[32px] sm:text-[36px] font-light text-[#BEBEBE] tracking-tight">
+                  <span className="text-[32px] sm:text-[36px] font-light text-numeral tracking-tight">
                     {step.time}
                   </span>
-                  <span className="text-[10px] font-mono tracking-wider text-[#5B6B7E] uppercase bg-[#F3F3F6] px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-mono tracking-wider text-brand-teal uppercase bg-surface px-2.5 py-0.5 rounded-full">
                     {step.period}
                   </span>
                 </div>
-                <h3 className="text-[19px] font-light text-[#454545] mb-2 leading-snug">
+                <h3 className="text-[19px] font-light text-brand-deep mb-2 leading-snug">
                   {step.title}
                 </h3>
-                <p className="text-[14px] text-[#6E6E73] leading-[1.6]">
+                <p className="text-[14px] text-muted leading-[1.6]">
                   {step.desc}
                 </p>
               </div>
