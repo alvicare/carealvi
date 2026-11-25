@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useId } from "react";
+import { createPortal } from "react-dom";
 
 // ============================================================================
 // AlviCare WebGL Shader Preloader — Brand Constants, Vector Paths & Math Rig
@@ -40,8 +41,8 @@ const ALVI_LETTERS_PATH =
   "M3760 10Q3688 10 3630.5 -22.5Q3573 -55 3539.5 -112Q3506 -169 3506 -240Q3506 -311 3539 -367.5Q3572 -424 3628.5 -457Q3685 -490 3754 -490Q3821 -490 3872.5 -459Q3924 -428 3953.5 -374Q3983 -320 3983 -251Q3983 -239 3981.5 -226.5Q3980 -214 3977 -199H3583V-289H3920L3879 -253Q3877 -297 3862 -327Q3847 -357 3819.5 -373Q3792 -389 3752 -389Q3710 -389 3679 -371Q3648 -353 3631 -320.5Q3614 -288 3614 -243Q3614 -198 3632 -164Q3650 -130 3683 -111.5Q3716 -93 3759 -93Q3796 -93 3827.5 -106Q3859 -119 3881 -144L3951 -73Q3916 -32 3866 -11Q3816 10 3760 10Z";
 
 // Phase durations (ms)
-const IGNITE_MS = 2200;
-const HOLD_MS = 2400;
+const IGNITE_MS = 2400;
+const HOLD_MS = 2800;
 const LIFT_MS = 1400;
 
 // Core geometry & rig constants
@@ -537,9 +538,20 @@ const ACP_CSS = `
 .acp-root {
   position: fixed;
   inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100vw;
+  width: 100%;
   height: 100vh;
-  z-index: 99999;
+  height: 100dvh;
+  min-width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  z-index: 999999;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   isolation: isolate;
   background: var(--acp-bg);
@@ -554,6 +566,14 @@ const ACP_CSS = `
 .acp-gate {
   position: absolute;
   inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   z-index: 10;
   background: var(--acp-bg);
   color: #f0fdfa;
@@ -573,8 +593,14 @@ const ACP_CSS = `
 .acp-layer, .acp-canvas {
   position: absolute;
   inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   display: block;
   pointer-events: none;
 }
@@ -739,17 +765,18 @@ export interface PreloaderProps {
 }
 
 export function Preloader({
-  durationMs = 2800,
+  durationMs = 4500,
   onComplete,
   className = "",
 }: PreloaderProps) {
   const uid = useId().replace(/:/g, "");
+  const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<"load" | "ignite" | "reveal" | "lift" | "done">("load");
   const [pct, setPct] = useState(0);
   const [pass, setPass] = useState(0);
   const [failed, setFailed] = useState(false);
   const [generation, setGeneration] = useState(0);
-  const [box, setBox] = useState({ w: 1280, h: 800 });
+  const [box, setBox] = useState({ w: 1920, h: 1080 });
   const still = usePrefersReducedMotion();
 
   const rootRef = useRef<HTMLDivElement>(null);
@@ -771,18 +798,16 @@ export function Preloader({
   const liftMs = still ? 500 : LIFT_MS;
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     phaseRef.current = phase;
     phaseAtRef.current = performance.now();
   }, [phase]);
 
   // Lock body scroll during preloader, unlock when finished
   useEffect(() => {
-    const hasSeen = typeof sessionStorage !== "undefined" && sessionStorage.getItem("alvi_intro_seen");
-    if (hasSeen) {
-      // Returning user in same session: fast entrance
-      rushRef.current = true;
-    }
-
     if (phase !== "done") {
       document.body.style.overflow = "hidden";
     } else {
@@ -801,16 +826,22 @@ export function Preloader({
   // Measure container
   useEffect(() => {
     const root = rootRef.current;
-    if (!root) return;
     const measure = () => {
-      const r = root.getBoundingClientRect();
-      if (r.width > 0 && r.height > 0) setBox({ w: Math.round(r.width), h: Math.round(r.height) });
+      const w = window.innerWidth || root?.clientWidth || 1920;
+      const h = window.innerHeight || root?.clientHeight || 1080;
+      if (w > 0 && h > 0) setBox({ w: Math.round(w), h: Math.round(h) });
     };
     measure();
-    if (typeof ResizeObserver === "undefined") return;
+    window.addEventListener("resize", measure);
+    if (!root || typeof ResizeObserver === "undefined") {
+      return () => window.removeEventListener("resize", measure);
+    }
     const ro = new ResizeObserver(measure);
     ro.observe(root);
-    return () => ro.disconnect();
+    return () => {
+      window.removeEventListener("resize", measure);
+      ro.disconnect();
+    };
   }, []);
 
   // Drive progress loop
@@ -913,8 +944,10 @@ export function Preloader({
       const t = still ? 4 : clock % 600;
 
       const dpr = Math.min(2, window.devicePixelRatio || 1);
-      const cw = Math.max(1, Math.round(canvas.clientWidth * dpr * 0.75));
-      const ch = Math.max(1, Math.round(canvas.clientHeight * dpr * 0.75));
+      const w = window.innerWidth || canvas.clientWidth || rootRef.current?.clientWidth || 1920;
+      const h = window.innerHeight || canvas.clientHeight || rootRef.current?.clientHeight || 1080;
+      const cw = Math.max(1, Math.round(w * dpr));
+      const ch = Math.max(1, Math.round(h * dpr));
       if (canvas.width !== cw || canvas.height !== ch) {
         canvas.width = cw;
         canvas.height = ch;
@@ -1083,7 +1116,7 @@ export function Preloader({
 
   if (phase === "done") return null;
 
-  return (
+  const content = (
     <div
       ref={rootRef}
       className={`acp-root ${className}`}
@@ -1229,6 +1262,12 @@ export function Preloader({
       </div>
     </div>
   );
+
+  if (mounted && typeof document !== "undefined") {
+    return createPortal(content, document.body);
+  }
+
+  return content;
 }
 
 export default Preloader;

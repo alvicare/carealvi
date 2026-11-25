@@ -1993,13 +1993,13 @@ export const ALVICARE_TEAM_MEMBERS: LanyardMember[] = [
     name: "Thisara Chandima",
     role: "Embedded Hardware & Robotics Lead",
     team: "Team 43 · ESP32-S3 Firmware & BOM",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces&q=80",
+    image: "/images/thisara.jpeg",
     bio: "Defined 4-tier hardware architecture, ESP32-S3 FreeRTOS firmware, BTS7960 500ms watchdog braking, 4x VL53L1X ToF laser navigation, and Sri Lanka BOM (w2212870 / 20251270).",
     tags: ["ESP32-S3 FreeRTOS", "VL53L1X ToF", "Hardware BOM"],
     links: [
       { label: "Email", href: "mailto:thisara.20251270@iit.ac.lk" },
       { label: "GitHub", href: "https://github.com/ThisaraChandima" },
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/thisarachandima" },
     ],
     tone: 2,
     drop: 20,
