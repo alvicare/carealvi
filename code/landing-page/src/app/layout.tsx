@@ -1,19 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-});
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-inter",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://alvibot.com"),
@@ -208,7 +194,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdData) }}
         />
       </head>
-      <body className={`${spaceGrotesk.variable} ${inter.variable} bg-white text-primary selection:bg-slateMist selection:text-slateAccent antialiased min-h-screen`}>
+      <body className="bg-white text-primary selection:bg-slateMist selection:text-slateAccent antialiased min-h-screen">
         {children}
       </body>
     </html>
