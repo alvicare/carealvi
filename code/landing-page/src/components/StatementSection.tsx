@@ -92,7 +92,7 @@ export function StatementSection() {
             style={{ color: "#1E2023" }}
           >
             {words.map((word, index) => {
-              // Words 0 and 1 ("Care shouldn't") are dark (#1E2023, opacity 1) at rest
+              // Keep the opening promise in brand teal as the rest of the sentence reveals.
               let opacity = 0.25;
 
               if (index <= 1) {
@@ -121,7 +121,7 @@ export function StatementSection() {
                   className="inline-block mx-[0.16em] transition-opacity duration-150"
                   style={{
                     opacity,
-                    color: "#1E2023",
+                    color: index <= 3 ? "var(--brand-teal)" : "#1E2023",
                   }}
                 >
                   {word}

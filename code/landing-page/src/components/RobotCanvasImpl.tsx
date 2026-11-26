@@ -4,6 +4,7 @@ import React, { useRef, useMemo, useState, useEffect, type MutableRefObject } fr
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, ContactShadows, Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
+import { HERO_SCROLL_PHASES } from "./heroScrollPhases";
 
 interface RobotModelProps {
   scrollProgressRef: MutableRefObject<number>;
@@ -148,20 +149,19 @@ function RobotModel({ scrollProgressRef }: RobotModelProps) {
 
     if (!robotRootRef.current) return;
 
-    // Two-Stage Choreography:
-    // Stage 1 (0.00 -> 0.38): Robot moves from center (X=0) to final position (X=0.64)
-    // Stage 2 (0.38 -> 1.00): Robot remains settled in its final position while watch explodes
-    const TRANSITION_END = 0.38;
+    // Phase 1 positions the robot; phase 2 holds it while the watch is scrubbed.
+    const TRANSITION_END = HERO_SCROLL_PHASES.positioningEnd;
+    const restingY = isMobile ? -0.45 : -0.68;
 
     let targetRobotX = 0;
-    let targetRobotY = -0.68;
+    let targetRobotY = restingY;
     let targetRobotZ = 0;
     let targetRobotRotY = 0;
     let targetRobotRotX = 0;
 
     if (scrollProgress <= 0) {
       targetRobotX = 0;
-      targetRobotY = -0.68 + Math.sin(time * 0.9) * 0.015;
+      targetRobotY = restingY + Math.sin(time * 0.9) * 0.015;
       targetRobotRotY = Math.sin(time * 0.5) * 0.04;
       targetRobotRotX = 0.02;
     } else if (scrollProgress < TRANSITION_END) {
@@ -169,13 +169,13 @@ function RobotModel({ scrollProgressRef }: RobotModelProps) {
       const easeP = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
 
       targetRobotX = isMobile ? 0 : 0.64 * easeP;
-      targetRobotY = -0.68 + 0.05 * easeP;
+      targetRobotY = restingY + 0.05 * easeP;
       targetRobotRotY = -0.48 * easeP + Math.sin(time * 0.5) * 0.02;
       targetRobotRotX = 0.02 * (1 - easeP) + 0.06 * easeP;
     } else {
       // Final position reached: hold steady on the right
       targetRobotX = isMobile ? 0 : 0.64;
-      targetRobotY = -0.68 + 0.05;
+      targetRobotY = restingY + 0.05;
       targetRobotRotY = -0.48 + Math.sin(time * 0.5) * 0.012;
       targetRobotRotX = 0.06;
     }
@@ -213,8 +213,8 @@ function RobotModel({ scrollProgressRef }: RobotModelProps) {
       {/* 1. Primary ALVI Autonomous Indoor Robot (.glb Model) */}
       <group
         ref={robotRootRef}
-        position={[0, -0.68, 0]}
-        scale={isMobile ? 0.86 : 1.08}
+        position={[0, isMobile ? -0.45 : -0.68, 0]}
+        scale={isMobile ? 0.7 : 1.08}
       >
         <primitive object={clonedScene} />
       </group>
@@ -248,7 +248,7 @@ export function RobotCanvasImpl({ scrollProgressRef }: RobotModelProps) {
       aria-label="ALVICARE 3D Interactive Canvas"
     >
       <Canvas
-        camera={{ position: isMobile ? [0, 0.2, 3.1] : [0, 0.26, 2.45], fov: 38 }}
+        camera={{ position: isMobile ? [0, 0.2, 3.2] : [0, 0.26, 2.45], fov: 38 }}
         dpr={isMobile ? [1, 1.25] : [1, 2]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         className="w-full h-full"

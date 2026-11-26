@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useMemo, type MutableRefObject } from "react";
+import { HERO_SCROLL_PHASES } from "./heroScrollPhases";
 
 /**
  * ==============================================================================
@@ -27,6 +28,11 @@ export const WATCH_CONFIG = {
    * Increase (e.g. 0.92, 0.96) or decrease (e.g. 0.82, 0.78).
    */
   scale: 0.88,
+  /** Mobile uses a wider transparent frame so the watch itself stays legible. */
+  mobileScale: 0.88,
+  mobileWidth: "min(62vw, 280px)",
+  mobileMaxWidth: "280px",
+  mobileMaxHeight: "none",
 
   /**
    * Maximum bounding width across desktop screens (increased from 520px).
@@ -46,6 +52,7 @@ export const WATCH_CONFIG = {
    * 48% aligns directly with the robot's chest/torso at the start.
    */
   initialTop: 48,
+  mobileInitialTop: 54,
 
   /**
    * Final vertical position (percentage 0-100) reached after initial scroll glide.
@@ -53,6 +60,7 @@ export const WATCH_CONFIG = {
    * so it crowns prominently above the robot's shoulders in the final layout.
    */
   finalTop: 34,
+  mobileFinalTop: 24,
 
   /**
    * Initial horizontal position (percentage 0-100).
@@ -89,7 +97,7 @@ export const WATCH_CONFIG = {
    * Matches the 3D robot model's TRANSITION_END (0.38).
    * During this phase, frames remain strictly locked on Frame 1 (assembled watch).
    */
-  glideEnd: 0.38,
+  glideEnd: HERO_SCROLL_PHASES.positioningEnd,
 
   // ----------------------------------------------------------------------------
   // STAGE 2: EXPLODED FRAME SCRUB TIMING ("when everything is in position only then scroll anim starts")
@@ -98,12 +106,12 @@ export const WATCH_CONFIG = {
    * Scroll progress (0.0 to 1.0) where the exploded disassembly sequence starts.
    * Strictly set at glideEnd (0.38) so the animation only starts after arriving in position.
    */
-  scrollStart: 0.38,
+  scrollStart: HERO_SCROLL_PHASES.positioningEnd,
 
   /**
    * Scroll progress (0.0 to 1.0) where the exploded sequence reaches the final frame.
    */
-  scrollEnd: 0.92,
+  scrollEnd: HERO_SCROLL_PHASES.watchSequenceEnd,
 
   // ----------------------------------------------------------------------------
   // VISIBILITY & OPACITY FADE
@@ -242,16 +250,20 @@ export function WatchHeroLayer({
     let previousSlot = -1;
     const drawFrame = (force = false) => {
       const progress = scrollProgressRef.current;
-      let top = config.initialTop;
-      let left = config.initialLeft;
+      const initialTop = isMobile ? config.mobileInitialTop : config.initialTop;
+      const finalTop = isMobile ? config.mobileFinalTop : config.finalTop;
+      const initialLeft = config.initialLeft;
+      const finalLeft = config.finalLeft;
+      let top = initialTop;
+      let left = initialLeft;
       if (progress >= config.glideEnd) {
-        top = config.finalTop;
-        left = config.finalLeft;
+        top = finalTop;
+        left = finalLeft;
       } else if (progress > config.glideStart) {
         const p = (progress - config.glideStart) / (config.glideEnd - config.glideStart);
         const ease = 1 - Math.pow(1 - p, 3);
-        top += (config.finalTop - config.initialTop) * ease;
-        left += (config.finalLeft - config.initialLeft) * ease;
+        top += (finalTop - initialTop) * ease;
+        left += (finalLeft - initialLeft) * ease;
       }
       let opacity = config.opacity;
       if (config.hideInInitialFrame) {
@@ -303,7 +315,7 @@ export function WatchHeroLayer({
       window.removeEventListener("resize", scheduleDraw);
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
-  }, [config, scrollProgressRef]);
+  }, [config, isMobile, scrollProgressRef]);
 
   return (
     <div
@@ -311,12 +323,12 @@ export function WatchHeroLayer({
       className="absolute pointer-events-none select-none transition-opacity duration-200 ease-out"
       style={{
         zIndex: config.zIndex,
-        top: `${config.initialTop}%`,
+        top: `${isMobile ? config.mobileInitialTop : config.initialTop}%`,
         left: `${config.initialLeft}%`,
-        transform: `translate(${config.translateX}, ${config.translateY}) scale(${config.scale})`,
-        width: "100%",
-        maxWidth: config.maxWidth,
-        maxHeight: config.maxHeight,
+        transform: `translate(${config.translateX}, ${config.translateY}) scale(${isMobile ? config.mobileScale : config.scale})`,
+        width: isMobile ? config.mobileWidth : "100%",
+        maxWidth: isMobile ? config.mobileMaxWidth : config.maxWidth,
+        maxHeight: isMobile ? config.mobileMaxHeight : config.maxHeight,
         opacity: 0,
         filter: config.dropShadow,
         visibility: "hidden",

@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { RobotCanvas } from "./RobotCanvas";
 import { WatchHeroLayer } from "./WatchHeroLayer";
+import { HERO_SCROLL_PHASES } from "./heroScrollPhases";
 
 interface HeroScrollSectionProps {
   onOpenWaitlist: () => void;
@@ -21,7 +22,7 @@ export function HeroScrollSection({ onOpenWaitlist }: HeroScrollSectionProps) {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mediaQuery.matches);
 
-    // Scroll listener for sticky 2.2-viewport sequence
+    // One shared timeline keeps the positioning and watch-scrub phases in sync.
     let animationFrameId: number;
 
     const handleScroll = () => {
@@ -93,7 +94,7 @@ export function HeroScrollSection({ onOpenWaitlist }: HeroScrollSectionProps) {
     <section
       ref={containerRef}
       className={`relative w-full ${
-        prefersReducedMotion ? "h-[100svh]" : "h-[220vh] md:h-[340vh]"
+        prefersReducedMotion ? "h-[100svh]" : "h-[285svh] md:h-[340vh]"
       } bg-white`}
       aria-label="ALVICARE Hero Overview"
     >
@@ -134,7 +135,7 @@ export function HeroScrollSection({ onOpenWaitlist }: HeroScrollSectionProps) {
         {/* Left Hero Column: Minimal Apple-Grade Product Lockup */}
         <div
           ref={leftColumnRef}
-          className="relative z-20 pointer-events-none w-full h-full flex items-center px-6 sm:px-12 md:px-16 lg:px-24"
+          className="relative z-20 pointer-events-none w-full h-full flex items-end pb-[56px] px-6 sm:px-12 md:items-center md:pb-0 md:px-16 lg:px-24"
           style={{
             opacity: 0,
             transform: "translateY(20px)",
