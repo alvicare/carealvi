@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 export interface BotTopic {
   id: string;
@@ -8,7 +8,6 @@ export interface BotTopic {
   title: string;
   headline: string;
   description: string;
-  enterFrom: "left" | "right";
 }
 
 export const BOT_TOPICS: BotTopic[] = [
@@ -19,7 +18,6 @@ export const BOT_TOPICS: BotTopic[] = [
     headline: "Natural expressions that comfort and reassure.",
     description:
       "ALVI recognizes household faces through edge vision, greeting family with gentle micro-interactions and empathetic gaze.",
-    enterFrom: "left",
   },
   {
     id: "medication",
@@ -28,7 +26,6 @@ export const BOT_TOPICS: BotTopic[] = [
     headline: "Clear visual guidance when dose time arrives.",
     description:
       "A soft audible chime and high-contrast prompts illuminate, staying present until onboard sensors confirm the regimen is complete.",
-    enterFrom: "right",
   },
   {
     id: "telepresence",
@@ -37,62 +34,77 @@ export const BOT_TOPICS: BotTopic[] = [
     headline: "Instant low-latency connection across any distance.",
     description:
       "Directional beamforming audio and encrypted video bring physicians and loved ones directly to the bedside with a single tap.",
-    enterFrom: "left",
   },
 ];
 
-export const BOT_CONFIG = {
-  totalFrames: 239,
-  framesBaseUrl: "/bot_frames/frame_",
-  fallbackWebp: "/bot.webp",
-};
-
-const STATEMENT_HEADLINE = "Always present. Never intrusive.";
-
-const STATEMENT_WORDS = [
-  "ALVI",
-  "runs",
-  "quietly",
-  "in",
-  "the",
-  "background.",
-  "Machine",
-  "intelligence",
-  "and",
-  "ambient",
-  "vision",
-  "tune",
-  "the",
-  "system",
-  "around",
-  "daily",
-  "home",
-  "life,",
-  "anticipating",
-  "care",
-  "moments",
-  "without",
-  "ever",
-  "demanding",
-  "attention.",
-  "An",
-  "expressive",
-  "companion",
-  "when",
-  "you",
-  "speak,",
-  "an",
-  "invisible",
-  "guardian",
-  "when",
-  "you",
-  "rest.",
+const TOTAL_FRAMES = 239;
+const FRAMES_BASE_URL = "/bot_frames/frame_";
+const FALLBACK_IMAGE = "/bot.webp";
+const STATEMENT = "Always present. Never intrusive.";
+const STAGES = [
+  { start: 0, end: 0.13, label: "THE MOMENT" },
+  { start: 0.13, end: 0.29, label: "ALVI ARRIVES" },
+  { start: 0.29, end: 0.47, label: "01 · EMPATHY" },
+  { start: 0.47, end: 0.65, label: "02 · MEDICATION" },
+  { start: 0.65, end: 0.83, label: "03 · FAMILY LINK" },
+  { start: 0.83, end: 0.97, label: "ALWAYS PRESENT" },
 ];
 
+type BeatCopy = { eyebrow: string; title: string; description?: string };
+const BEATS: BeatCopy[] = [
+  {
+    eyebrow: "A CARE MOMENT, CONTINUED",
+    title: "The moment continues at home.",
+  },
+  {
+    eyebrow: "A FAMILIAR PRESENCE",
+    title: "ALVI arrives in the room.",
+    description: "A calm companion, ready when care calls for it.",
+  },
+  {
+    eyebrow: "01 · AUTONOMOUS EMPATHY ENGINE",
+    title: BOT_TOPICS[0].headline,
+    description: BOT_TOPICS[0].description,
+  },
+  {
+    eyebrow: "02 · SCHEDULED MEDICATION VERIFICATION",
+    title: BOT_TOPICS[1].headline,
+    description: BOT_TOPICS[1].description,
+  },
+  {
+    eyebrow: "03 · TWO-WAY TELEHEALTH & FAMILY LINK",
+    title: "A familiar face, on ALVI’s display.",
+    description: BOT_TOPICS[2].description,
+  },
+  {
+    eyebrow: "ALVI AT HOME",
+    title: STATEMENT,
+    description: "Three thoughtful capabilities. One familiar presence.",
+  },
+];
+
+function clamp01(value: number) {
+  return Math.max(0, Math.min(1, value));
+}
+
+function smooth(value: number) {
+  const t = clamp01(value);
+  return t * t * (3 - 2 * t);
+}
+
+function stageVisibility(progress: number, start: number, end: number) {
+  const local = (progress - start) / (end - start);
+  const fadeIn = smooth(local / 0.14);
+  const fadeOut = smooth((1 - local) / 0.14);
+  return Math.min(fadeIn, fadeOut);
+}
+
 export function TelepresenceSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const frameNumbersRef = useRef<number[]>([]);
   const drawCurrentFrameRef = useRef<() => void>(() => {});
 
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -101,503 +113,256 @@ export function TelepresenceSection() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const updateMobile = () => setIsMobile(window.innerWidth < 768);
-    updateMobile();
-    window.addEventListener("resize", updateMobile);
-    return () => window.removeEventListener("resize", updateMobile);
-  }, []);
-
-  // 1. Reduced motion & scroll listener
-  useEffect(() => {
+    const updateViewport = () => setIsMobile(window.innerWidth < 768);
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    updateViewport();
     setPrefersReducedMotion(mediaQuery.matches);
-
-    const handleMediaChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
-    };
+    window.addEventListener("resize", updateViewport);
+    const handleMediaChange = (event: MediaQueryListEvent) => setPrefersReducedMotion(event.matches);
     mediaQuery.addEventListener("change", handleMediaChange);
-
-    let animationFrameId: number;
-
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const totalScrollable =
-        containerRef.current.offsetHeight - window.innerHeight;
-
-      if (totalScrollable <= 0) return;
-
-      // When rect.top > 0, section is entering from below: hold at 0
-      if (rect.top > 0) {
-        animationFrameId = requestAnimationFrame(() => {
-          setScrollProgress(0);
-        });
-        return;
-      }
-
-      // Progress scrubs strictly while locked sticky in viewport
-      const progress = Math.max(0, Math.min(1, -rect.top / totalScrollable));
-
-      animationFrameId = requestAnimationFrame(() => {
-        setScrollProgress(progress);
-      });
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-
     return () => {
+      window.removeEventListener("resize", updateViewport);
       mediaQuery.removeEventListener("change", handleMediaChange);
-      window.removeEventListener("scroll", handleScroll);
-      cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
-  // 2. Load frame zero immediately and defer the rest until the section is near.
   useEffect(() => {
-    let isCancelled = false;
+    let cancelled = false;
     let remainingLoaded = false;
-    const frameNumbers = Array.from({ length: BOT_CONFIG.totalFrames }, (_, i) => i)
-      .filter((index) => !isMobile || index % 2 === 0);
-    if (frameNumbers[frameNumbers.length - 1] !== BOT_CONFIG.totalFrames - 1) {
-      frameNumbers.push(BOT_CONFIG.totalFrames - 1);
+    const frameNumbers = Array.from({ length: TOTAL_FRAMES }, (_, index) => index).filter(
+      (index) => !isMobile || index % 2 === 0
+    );
+    if (frameNumbers[frameNumbers.length - 1] !== TOTAL_FRAMES - 1) {
+      frameNumbers.push(TOTAL_FRAMES - 1);
     }
     const images: HTMLImageElement[] = new Array(frameNumbers.length);
+    frameNumbersRef.current = frameNumbers;
+    imagesRef.current = images;
 
     const loadFrame = (slot: number) => {
-      if (isCancelled || images[slot]) return;
-      const img = new Image();
-      const frameNum = String(frameNumbers[slot] + 1).padStart(4, "0");
-      img.src = `${BOT_CONFIG.framesBaseUrl}${frameNum}.webp`;
-
-      img.onload = () => {
-        if (isCancelled) return;
-        if (slot === 0) {
-          setImagesLoaded(true);
-        }
+      if (cancelled || images[slot]) return;
+      const image = new Image();
+      images[slot] = image;
+      image.onload = () => {
+        if (cancelled) return;
+        if (slot === 0) setImagesLoaded(true);
         drawCurrentFrameRef.current();
       };
-      images[slot] = img;
+      image.src = `${FRAMES_BASE_URL}${String(frameNumbers[slot] + 1).padStart(4, "0")}.webp`;
     };
-    imagesRef.current = images;
     loadFrame(0);
 
     const observer = new IntersectionObserver((entries) => {
       if (remainingLoaded || !entries.some((entry) => entry.isIntersecting)) return;
       remainingLoaded = true;
-      for (let slot = 1; slot < frameNumbers.length; slot++) loadFrame(slot);
+      for (let slot = 1; slot < frameNumbers.length; slot += 1) loadFrame(slot);
       observer.disconnect();
     }, { rootMargin: "100% 0px" });
     if (containerRef.current) observer.observe(containerRef.current);
 
     return () => {
-      isCancelled = true;
+      cancelled = true;
       observer.disconnect();
       imagesRef.current = [];
+      frameNumbersRef.current = [];
     };
   }, [isMobile]);
 
-  // 3. Phase Calculations
-  // Phase 1 (0.00 -> 0.40): Statement view with word-by-word bold/light-up scroll reveal
-  // Phase 2 (0.38 -> 0.46): Seamless slide transition from statement to robot head
-  // Phase 3 (0.46 -> 0.90): Pure robot scrubbing through 3 screen modes with side text & bold illumination
-  // Phase 4 (0.90 -> 1.00): Soft bottom dissolve into white
+  useEffect(() => {
+    let animationFrameId = 0;
+    const updateProgress = () => {
+      if (!containerRef.current || prefersReducedMotion) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const scrollable = containerRef.current.offsetHeight - window.innerHeight;
+      const next = scrollable <= 0 ? 0 : clamp01(-rect.top / scrollable);
+      if (stageRef.current) stageRef.current.style.setProperty("--scroll-progress", String(next));
+      setScrollProgress((current) => (Math.abs(current - next) > 0.002 ? next : current));
+    };
+    const onScroll = () => {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(updateProgress);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    updateProgress();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [prefersReducedMotion]);
 
-  // Statement slide & opacity
-  const statementTranslateX = useMemo(() => {
-    if (scrollProgress <= 0.08) {
-      return -70 * (1 - scrollProgress / 0.08);
-    }
-    if (scrollProgress > 0.38) {
-      const t = Math.min(1, (scrollProgress - 0.38) / 0.09);
-      return -90 * t;
-    }
-    return 0;
-  }, [scrollProgress]);
+  const frameIndex = useMemo(() => {
+    const frameNumbers = frameNumbersRef.current;
+    if (!frameNumbers.length) return 0;
 
-  const statementOpacity = useMemo(() => {
-    if (scrollProgress <= 0.04) {
-      return scrollProgress / 0.04;
-    }
-    if (scrollProgress > 0.38) {
-      return Math.max(0, 1 - (scrollProgress - 0.38) / 0.08);
-    }
-    return 1;
-  }, [scrollProgress]);
+    // Keep the existing animation beats aligned with the storyboard: expressive
+    // eyes, medication prompt, family call, then the clinician connection.
+    const frameAt = (start: number, end: number, first: number, last: number) =>
+      first + smooth((scrollProgress - start) / (end - start)) * (last - first);
+    let targetFrame = 0;
+    if (scrollProgress < 0.29) targetFrame = 0;
+    else if (scrollProgress < 0.47) targetFrame = frameAt(0.29, 0.47, 0, 25);
+    else if (scrollProgress < 0.65) targetFrame = frameAt(0.47, 0.65, 25, 88);
+    else if (scrollProgress < 0.83) targetFrame = frameAt(0.65, 0.83, 88, 160);
+    else targetFrame = frameAt(0.83, 0.97, 160, TOTAL_FRAMES - 1);
 
-  // Word-by-word reveal for the statement body (progress 0.05 -> 0.36)
-  const statementProgress = useMemo(() => {
-    if (scrollProgress < 0.05) return 0;
-    if (scrollProgress > 0.36) return 1;
-    return (scrollProgress - 0.05) / (0.36 - 0.05);
-  }, [scrollProgress]);
+    const slot = frameNumbers.findIndex((frameNumber) => frameNumber >= targetFrame);
+    return slot === -1 ? frameNumbers.length - 1 : slot;
+  }, [scrollProgress, isMobile, imagesLoaded]);
 
-  // Robot hardware reveal & transition (progress 0.40 -> 0.90)
-  const hardwareOpacity = useMemo(() => {
-    if (scrollProgress < 0.40) return 0;
-    if (scrollProgress >= 0.47) return 1;
-    return (scrollProgress - 0.40) / 0.07;
-  }, [scrollProgress]);
-
-  const hardwareScale = useMemo(() => {
-    if (scrollProgress < 0.40) return 0.92;
-    if (scrollProgress >= 0.48) return 1;
-    return 0.92 + ((scrollProgress - 0.40) / 0.08) * 0.08;
-  }, [scrollProgress]);
-
-  // Robot scrubbing progress across frames (progress 0.46 -> 0.90)
-  const scrubProgress = useMemo(() => {
-    if (scrollProgress < 0.46) return 0;
-    if (scrollProgress > 0.90) return 1;
-    return (scrollProgress - 0.46) / (0.90 - 0.46);
-  }, [scrollProgress]);
-
-  // 3 Mode Index (0, 1, 2)
-  const topicCount = BOT_TOPICS.length;
-  const topicSegment = 1 / topicCount;
-
-  const activeTopicIndex = useMemo(() => {
-    const idx = Math.floor(scrubProgress / topicSegment);
-    return Math.min(topicCount - 1, Math.max(0, idx));
-  }, [scrubProgress, topicSegment, topicCount]);
-
-  // Local progress inside active topic (0.00 -> 1.00)
-  const topicLocalProgress = useMemo(() => {
-    const start = activeTopicIndex * topicSegment;
-    const local = (scrubProgress - start) / topicSegment;
-    return Math.max(0, Math.min(1, local));
-  }, [scrubProgress, activeTopicIndex, topicSegment]);
-
-  // Pre-split words for all 3 topics
-  const allTopicWords = useMemo(() => {
-    return BOT_TOPICS.map((topic) => {
-      const fullText = `${topic.headline} ${topic.description}`;
-      return fullText.split(/\s+/).filter(Boolean);
-    });
-  }, []);
-
-  const activeTopic = BOT_TOPICS[activeTopicIndex];
-  const activeWords = allTopicWords[activeTopicIndex] || [];
-
-  // Slide transition calculation for topic text appearing from side
-  const { topicOpacity, topicTranslateX } = useMemo(() => {
-    const enterDir = activeTopic.enterFrom === "left" ? -1 : 1;
-    let opacity = 1;
-    let translateX = 0;
-
-    if (topicLocalProgress < 0.14) {
-      // Smooth slide-in from side
-      const t = topicLocalProgress / 0.14;
-      opacity = Math.max(0, t);
-      translateX = enterDir * 60 * (1 - t);
-    } else if (
-      topicLocalProgress > 0.88 &&
-      activeTopicIndex < topicCount - 1
-    ) {
-      // Soft glide out towards opposite side before next mode enters
-      const t = (topicLocalProgress - 0.88) / 0.12;
-      opacity = Math.max(0, 1 - t);
-      translateX = -enterDir * 40 * t;
-    }
-
-    return { topicOpacity: opacity, topicTranslateX: translateX };
-  }, [topicLocalProgress, activeTopicIndex, topicCount, activeTopic.enterFrom]);
-
-  // Frame calculation (1 to 239)
-  const currentFrameIndex = useMemo(() => {
-    const frameCount = isMobile
-      ? Math.ceil(BOT_CONFIG.totalFrames / 2) + (BOT_CONFIG.totalFrames % 2 === 0 ? 1 : 0)
-      : BOT_CONFIG.totalFrames;
-    return Math.min(
-      frameCount - 1,
-      Math.max(0, Math.floor(scrubProgress * (frameCount - 1)))
-    );
-  }, [scrubProgress, isMobile]);
-
-  // 4. Render to Canvas with Retina DPR
   const drawCurrentFrame = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const context = canvas?.getContext("2d");
+    const image = imagesRef.current[frameIndex];
+    if (!canvas || !context || !image?.complete || image.naturalWidth === 0) return;
 
-    const currentImg = imagesRef.current[currentFrameIndex];
-    if (currentImg && currentImg.complete && currentImg.naturalWidth > 0) {
-      const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-      const displayWidth = canvas.clientWidth;
-      const displayHeight = canvas.clientHeight;
-
-      if (
-        canvas.width !== displayWidth * dpr ||
-        canvas.height !== displayHeight * dpr
-      ) {
-        canvas.width = displayWidth * dpr;
-        canvas.height = displayHeight * dpr;
-      }
-
-      ctx.save();
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, displayWidth, displayHeight);
-
-      const imgRatio = currentImg.naturalWidth / currentImg.naturalHeight;
-      const canvasRatio = displayWidth / displayHeight;
-
-      let drawWidth = displayWidth;
-      let drawHeight = displayHeight;
-      let offsetX = 0;
-      let offsetY = 0;
-
-      if (canvasRatio > imgRatio) {
-        drawHeight = displayHeight;
-        drawWidth = displayHeight * imgRatio;
-        offsetX = (displayWidth - drawWidth) / 2;
-      } else {
-        drawWidth = displayWidth;
-        drawHeight = displayWidth / imgRatio;
-        offsetY = (displayHeight - drawHeight) / 2;
-      }
-
-      ctx.drawImage(currentImg, offsetX, offsetY, drawWidth, drawHeight);
-      ctx.restore();
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    if (!width || !height) return;
+    if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
     }
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    context.clearRect(0, 0, width, height);
+    const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+    const drawWidth = image.naturalWidth * scale;
+    const drawHeight = image.naturalHeight * scale;
+    context.drawImage(image, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
   };
   drawCurrentFrameRef.current = drawCurrentFrame;
 
   useEffect(() => {
     drawCurrentFrame();
-  }, [currentFrameIndex, imagesLoaded]);
+  }, [frameIndex, imagesLoaded, isMobile]);
+
+  const activeBeatIndex = useMemo(() => {
+    const index = STAGES.findIndex((stage) => scrollProgress >= stage.start && scrollProgress < stage.end);
+    return index === -1 ? STAGES.length - 1 : index;
+  }, [scrollProgress]);
+
+  const robotIn = smooth((scrollProgress - 0.07) / 0.2);
+  const robotOut = 1 - smooth((scrollProgress - 0.94) / 0.06);
+  const robotOpacity = prefersReducedMotion ? 1 : robotIn * robotOut;
+  const copy = BEATS[activeBeatIndex];
+  const copyOpacity = stageVisibility(scrollProgress, STAGES[activeBeatIndex].start, STAGES[activeBeatIndex].end);
+  const handoffProgress = smooth(scrollProgress / 0.19);
+  const familyPush = smooth((scrollProgress - STAGES[4].start) / (STAGES[4].end - STAGES[4].start));
+  const familySettle = smooth((scrollProgress - STAGES[4].end) / 0.06);
+  const familyCameraScale = 1 + 0.28 * familyPush * (1 - familySettle);
+  const showFinal = activeBeatIndex === 5;
+  const activeLabel = STAGES[activeBeatIndex].label;
+
+  if (prefersReducedMotion) {
+    return (
+      <section id="telepresence" className="bg-brand-dark px-6 py-20 text-white sm:px-10" aria-label="ALVICARE Telepresence and Expressive Interface">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[1.2fr_.8fr]">
+          <div>
+            <p className="mb-4 font-mono text-xs tracking-[.18em] text-brand-mint-bright">ALVI AT HOME</p>
+            <h2 className="font-heading text-4xl leading-tight tracking-[-.035em] text-brand-mint-bright sm:text-5xl">{STATEMENT}</h2>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-white/75">The moment continues at home. ALVI brings a familiar presence, thoughtful support, and a clearer connection to family.</p>
+            <div className="mt-9 grid gap-5 sm:grid-cols-3">
+              {BOT_TOPICS.map((topic) => (
+                <article key={topic.id}>
+                  <span className="font-mono text-xs text-brand-mint-bright">{topic.num}</span>
+                  <h3 className="mt-2 font-heading text-lg leading-snug text-white">{topic.title}</h3>
+                </article>
+              ))}
+            </div>
+          </div>
+          <img src={FALLBACK_IMAGE} alt="ALVI care companion robot" className="mx-auto w-full max-w-md object-contain" />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
       id="telepresence"
       ref={containerRef}
-      className={`relative w-full ${
-        prefersReducedMotion ? "h-auto py-24" : "h-[260vh] md:h-[450vh]"
-      } bg-brand-dark text-white selection:bg-white/20`}
+      className={`relative w-full ${isMobile ? "h-[320svh]" : "h-[480svh]"} bg-brand-dark text-white selection:bg-white/20`}
       aria-label="ALVICARE Telepresence and Expressive Interface"
     >
-      {/* Sticky Full-Viewport Stage */}
-      <div className="sticky top-0 left-0 w-full h-[100svh] overflow-hidden flex flex-col items-center justify-center px-6 sm:px-12 md:px-16 lg:px-24">
+      <div ref={stageRef} className="sticky top-0 h-[100svh] w-full overflow-hidden bg-brand-dark">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_68%_45%,rgba(20,184,166,.18),transparent_42%),linear-gradient(120deg,#083B37_0%,#072B28_100%)]" />
+        <div className="absolute -right-[12%] top-[10%] h-[70vh] w-[60vw] rounded-full bg-brand-teal/10 blur-[100px]" />
 
-        {/* ============================================================== */}
-        {/* PHASE 1: Extra-Large Word-by-Word Scroll Reveal Statement      */}
-        {/* ============================================================== */}
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center px-6 sm:px-12 md:px-20 z-20 pointer-events-none transition-transform duration-100 ease-out"
-          style={{
-            opacity: prefersReducedMotion ? 0 : statementOpacity,
-            transform: `translateX(${statementTranslateX}px)`,
-            display: statementOpacity === 0 ? "none" : "flex",
-          }}
-        >
-          <div className="max-w-[1080px] w-full text-left md:text-center">
-            
-            {/* Big Headline */}
-            <h2
-              className="font-normal text-white mb-6 md:mb-8 tracking-[-0.03em] select-none"
-              style={{
-                fontSize: "clamp(42px, 5.8vw, 84px)",
-                lineHeight: 1.05,
-              }}
-            >
-              {STATEMENT_HEADLINE}
-            </h2>
-
-            {/* Word-by-Word Illuminating & Bolding Scroll Reveal Paragraph */}
-            <p
-              className="leading-[1.32] select-none"
-              style={{
-                fontSize: "clamp(24px, 3.2vw, 42px)",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              {STATEMENT_WORDS.map((word, index) => {
-                const totalWords = STATEMENT_WORDS.length;
-                const wordTarget = index / totalWords;
-
-                let isBold = false;
-                let opacity = 0.22;
-
-                if (statementProgress >= wordTarget) {
-                  const local = Math.min(
-                    1,
-                    Math.max(
-                      0,
-                      (statementProgress - wordTarget) * (totalWords / 2.5)
-                    )
-                  );
-                  opacity = 0.22 + 0.78 * local;
-                  if (local > 0.6) {
-                    isBold = true;
-                  }
-                }
-
-                return (
-                  <span
-                    key={index}
-                    className="inline-block mx-[0.14em] transition-all duration-150"
-                    style={{
-                      opacity,
-                      color: isBold ? "#FFFFFF" : "rgba(255, 255, 255, 0.68)",
-                      fontWeight: isBold ? 500 : 300,
-                    }}
-                  >
-                    {word}
-                  </span>
-                );
-              })}
-            </p>
-
-            {/* Subtle Scroll Hint */}
-            <div className="flex flex-col items-center gap-2 mt-12 opacity-60">
-              <span className="text-[11px] font-mono tracking-widest text-white/70 uppercase">
-                Scroll to explore
-              </span>
-              <div className="w-[1px] h-6 bg-gradient-to-b from-white/70 to-transparent animate-pulse" />
-            </div>
-
-          </div>
+        <div className="absolute left-6 top-7 z-30 sm:left-10 sm:top-9 md:left-16">
+          <p className="font-mono text-[10px] tracking-[.2em] text-brand-mint-bright sm:text-xs">ALVI · CARE, CLOSE TO HOME</p>
         </div>
 
-        {/* ============================================================== */}
-        {/* PHASE 2 & 3: Centered Robot & Side Slide-In Topic Animation     */}
-        {/* ============================================================== */}
         <div
-          className="relative w-full max-w-[1240px] h-full flex flex-col items-center justify-center py-6 sm:py-10 z-20"
-          style={{
-            opacity: prefersReducedMotion ? 1 : hardwareOpacity,
-            transform: `scale(${prefersReducedMotion ? 1 : hardwareScale})`,
-            pointerEvents: hardwareOpacity > 0.5 ? "auto" : "none",
-          }}
+          className="absolute right-[-8%] top-[4%] z-10 h-[44svh] w-[116vw] sm:right-[-2%] sm:top-[1%] sm:h-[68%] sm:w-[68%] md:right-[-4%] md:top-[-4%] md:h-[106%] md:w-[65%]"
+          style={{ opacity: robotOpacity, transform: `translate3d(${(1 - robotIn) * 90}px, 0, 0) scale(${familyCameraScale})`, transformOrigin: "58% 52%" }}
+          aria-hidden="true"
         >
-          {/* Ambient Radial Backlight behind Robot */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[480px] rounded-full bg-gradient-to-tr from-brand-teal/25 via-brand-mint/15 to-transparent blur-[140px] pointer-events-none -z-10" />
+          <canvas ref={canvasRef} className="block h-full w-full drop-shadow-[0_28px_65px_rgba(0,0,0,.48)]" />
+        </div>
 
-          {/* Centered Robot Head Hardware Display */}
-          <div className="relative w-full max-w-[760px] aspect-[16/10] sm:aspect-[16/9] flex items-center justify-center my-auto">
-            {prefersReducedMotion ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={BOT_CONFIG.fallbackWebp}
-                alt="ALVI Robot Head Display"
-                className="w-full h-full object-contain select-none pointer-events-none filter drop-shadow-[0_25px_60px_rgba(0,0,0,0.85)]"
-              />
-            ) : (
-              <canvas
-                ref={canvasRef}
-                className="w-full h-full select-none pointer-events-none block filter drop-shadow-[0_30px_70px_rgba(0,0,0,0.9)]"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: "block",
-                }}
-              />
-            )}
-          </div>
+        <svg
+          className="absolute left-[5%] top-[20%] z-20 h-24 w-64 sm:left-[10%] sm:top-[22%] md:left-[38%] md:top-[22%]"
+          viewBox="0 0 260 96"
+          aria-hidden="true"
+          style={{ opacity: 1 - handoffProgress, transform: `translateX(${handoffProgress * 130}px) scale(${1 - handoffProgress * 0.3})` }}
+        >
+          <rect x="30" y="36" width="60" height="24" rx="12" transform="rotate(-22 60 48)" fill="#F3F7F4" />
+          <rect x="38" y="36" width="60" height="24" rx="12" transform="rotate(-22 68 48)" fill="#54C2B4" fillOpacity=".85" />
+          <rect x="151" y="19" width="72" height="58" rx="20" fill="#54C2B4" fillOpacity=".055" stroke="#A6ECDD" strokeOpacity=".56" strokeWidth="1.5" transform={`rotate(${handoffProgress * 14} 187 48)`} />
+          <circle cx="130" cy="48" r="3" fill="#F4C38F" opacity={handoffProgress} />
+        </svg>
 
-          {/* Large Editorial Text Appearing from Side with Word-by-Word Bolding */}
-          <div className="w-full max-w-[960px] text-center px-4 mb-4 select-none">
-            <div
-              key={activeTopic.id}
-              className="transition-transform duration-200 ease-out"
-              style={{
-                opacity: prefersReducedMotion ? 1 : topicOpacity,
-                transform: `translateX(${
-                  prefersReducedMotion ? 0 : topicTranslateX
-                }px)`,
-              }}
-            >
-              {/* Sleek Topic Pill & Header */}
-              <div className="flex items-center justify-center gap-3 mb-3">
-                <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white/90 font-mono text-[12px] sm:text-[13px] tracking-wider border border-white/15">
-                  {activeTopic.num}
-                </span>
-                <h3
-                  className="font-normal text-white tracking-[-0.02em]"
-                  style={{
-                    fontSize: "clamp(26px, 3.4vw, 44px)",
-                    lineHeight: 1.15,
-                  }}
-                >
-                  {activeTopic.title}
-                </h3>
-              </div>
-
-              {/* Word-by-Word Illuminating & Bolding Topic Paragraph */}
-              <p
-                className="leading-[1.38] select-none max-w-[820px] mx-auto"
-                style={{
-                  fontSize: "clamp(19px, 2.3vw, 30px)",
-                  letterSpacing: "-0.015em",
-                }}
+        <div className="absolute inset-x-6 bottom-[12%] z-30 h-[32%] sm:inset-x-10 md:bottom-auto md:left-[7%] md:right-auto md:top-1/2 md:h-[54%] md:w-[36%] md:-translate-y-1/2">
+          {BEATS.map((beat, index) => {
+            const stage = STAGES[index];
+            const visibility = index === activeBeatIndex
+              ? stageVisibility(scrollProgress, stage.start, stage.end)
+              : 0;
+            return (
+              <div
+                key={beat.eyebrow}
+                className="absolute inset-0"
+                style={{ opacity: visibility, transform: `translate3d(0, ${(1 - visibility) * 18}px, 0)`, pointerEvents: visibility > 0.65 ? "auto" : "none" }}
+                aria-hidden={visibility < 0.05}
               >
-                {activeWords.map((word, wIdx) => {
-                  const totalWords = activeWords.length;
-                  const wordTarget = wIdx / totalWords;
+                <p className="mb-3 font-mono text-[10px] tracking-[.16em] text-brand-mint-bright sm:text-xs">{beat.eyebrow}</p>
+                <h2 className="max-w-[680px] font-heading text-[clamp(30px,4.15vw,62px)] font-medium leading-[1.05] tracking-[-.045em] text-brand-mint-bright">{beat.title}</h2>
+                {beat.description && <p className="mt-4 max-w-[540px] text-sm leading-6 text-white/72 sm:text-base sm:leading-7">{beat.description}</p>}
+              </div>
+            );
+          })}
 
-                  // Illumination progress within the topic window (0.10 -> 0.85)
-                  const wordWindowProgress = Math.max(
-                    0,
-                    Math.min(1, (topicLocalProgress - 0.10) / (0.85 - 0.10))
-                  );
-
-                  let isBold = false;
-                  let opacity = 0.22;
-
-                  if (wordWindowProgress >= wordTarget) {
-                    const local = Math.min(
-                      1,
-                      Math.max(
-                        0,
-                        (wordWindowProgress - wordTarget) * (totalWords / 2.2)
-                      )
-                    );
-                    opacity = 0.22 + 0.78 * local;
-                    if (local > 0.55) {
-                      isBold = true;
-                    }
-                  }
-
-                  return (
-                    <span
-                      key={wIdx}
-                      className="inline-block mx-[0.14em] transition-all duration-150"
-                      style={{
-                        opacity: prefersReducedMotion ? 1 : opacity,
-                        color: prefersReducedMotion
-                          ? "#FFFFFF"
-                          : isBold
-                          ? "#FFFFFF"
-                          : "rgba(255, 255, 255, 0.68)",
-                        fontWeight: prefersReducedMotion
-                          ? 400
-                          : isBold
-                          ? 500
-                          : 300,
-                      }}
-                    >
-                      {word}
-                    </span>
-                  );
-                })}
-              </p>
+          {showFinal && (
+            <div className="pointer-events-none absolute left-0 top-full mt-6 hidden space-y-3 md:block" style={{ opacity: copyOpacity }}>
+              {BOT_TOPICS.map((topic) => (
+                <div key={topic.id} className="flex items-center gap-3">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-brand-mint-bright/60 bg-brand-mint/20 font-mono text-[10px] text-brand-mint-bright">{topic.num}</span>
+                  <span className="font-heading text-lg text-white/85">{topic.title}</span>
+                </div>
+              ))}
             </div>
-          </div>
-
+          )}
         </div>
 
-        {/* ============================================================== */}
-        {/* PHASE 4: Soft Vertical Gradient Dissolve into White Stage      */}
-        {/* ============================================================== */}
-        <div
-          className="absolute bottom-0 left-0 w-full h-40 pointer-events-none z-30"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.4) 40%, #FFFFFF 100%)",
-            opacity: Math.max(0, Math.min(1, (scrollProgress - 0.88) / 0.12)),
-          }}
-        />
+        {activeBeatIndex === 3 && (
+          <div
+            className="absolute bottom-[34%] left-6 z-20 flex items-center gap-3 rounded-full border border-white/20 bg-white/[.08] px-4 py-2.5 text-xs text-white/90 shadow-[0_12px_35px_rgba(0,0,0,.14)] backdrop-blur-xl sm:left-10 md:bottom-[22%] md:left-[7%]"
+            style={{ opacity: copyOpacity, transform: `translateY(${(1 - copyOpacity) * 12}px)` }}
+            aria-hidden="true"
+          >
+            <span className="grid h-7 w-7 place-items-center rounded-full bg-brand-mint/20 text-brand-mint-bright">✓</span>
+            <span className="font-medium">Scheduled dose · sensor confirmation</span>
+          </div>
+        )}
 
+        <div className="absolute bottom-6 left-6 z-30 sm:bottom-8 sm:left-10 md:bottom-10 md:left-[7%]">
+          <p className="font-heading text-base tracking-[-.02em] text-white sm:text-lg">The moment continues <span className="text-brand-mint-bright">at home.</span></p>
+        </div>
+        <div className="absolute bottom-8 right-6 z-30 font-mono text-[9px] tracking-[.15em] text-white/50 sm:right-10 md:bottom-10 md:right-[7%]">
+          {String(activeBeatIndex + 1).padStart(2, "0")} <span className="text-brand-mint-bright">/</span> 06 · {activeLabel}
+        </div>
+        <div className="pointer-events-none absolute bottom-0 left-0 z-30 h-20 w-full bg-gradient-to-b from-transparent to-white/10" />
       </div>
     </section>
   );
