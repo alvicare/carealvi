@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useMemo, type MutableRefObject } from "react";
-import { HERO_SCROLL_PHASES } from "./heroScrollPhases";
+import {
+  HERO_SCROLL_PHASES,
+  type TimedPlaybackState,
+} from "./heroScrollPhases";
 
 /**
  * ==============================================================================
@@ -170,11 +173,13 @@ export const WATCH_CONFIG = {
 
 interface WatchHeroLayerProps {
   scrollProgressRef: MutableRefObject<number>;
+  playbackRef: MutableRefObject<TimedPlaybackState>;
   customConfig?: Partial<typeof WATCH_CONFIG>;
 }
 
 export function WatchHeroLayer({
   scrollProgressRef,
+  playbackRef,
   customConfig,
 }: WatchHeroLayerProps) {
   // Merge default config with any custom overrides passed via props
@@ -282,9 +287,14 @@ export function WatchHeroLayer({
       }
 
       const frames = frameNumbersRef.current;
+      const playback = playbackRef.current;
       const sequenceProgress = progress < config.scrollStart
         ? 0
-        : Math.min(1, Math.max(0, (progress - config.scrollStart) / (config.scrollEnd - config.scrollStart)));
+        : playback.completed
+        ? 1
+        : playback.startedAt === null
+        ? 0
+        : Math.min(1, (performance.now() - playback.startedAt) / playback.durationMs);
       const slot = Math.min(frames.length - 1, Math.floor(sequenceProgress * (frames.length - 1)));
       if (slot === previousSlot && !force) return;
       previousSlot = slot;
@@ -300,22 +310,28 @@ export function WatchHeroLayer({
       ctx.drawImage(currentImg, 0, 0);
     };
     drawFrameRef.current = drawFrame;
+    const drawLoop = () => {
+      rafId = null;
+      drawFrame();
+      if (playbackRef.current.startedAt !== null) {
+        rafId = requestAnimationFrame(drawLoop);
+      }
+    };
     const scheduleDraw = () => {
       if (rafId !== null) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-        drawFrame();
-      });
+      rafId = requestAnimationFrame(drawLoop);
     };
     window.addEventListener("scroll", scheduleDraw, { passive: true });
+    window.addEventListener("hero-watch-playback-start", scheduleDraw);
     window.addEventListener("resize", scheduleDraw);
     drawFrame(true);
     return () => {
       window.removeEventListener("scroll", scheduleDraw);
+      window.removeEventListener("hero-watch-playback-start", scheduleDraw);
       window.removeEventListener("resize", scheduleDraw);
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
-  }, [config, isMobile, scrollProgressRef]);
+  }, [config, isMobile, playbackRef, scrollProgressRef]);
 
   return (
     <div

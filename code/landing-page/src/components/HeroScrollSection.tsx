@@ -3,7 +3,12 @@
 import React, { useRef, useState, useEffect } from "react";
 import { RobotCanvas } from "./RobotCanvas";
 import { WatchHeroLayer } from "./WatchHeroLayer";
-import { HERO_SCROLL_PHASES } from "./heroScrollPhases";
+import {
+  HERO_SCROLL_PHASES,
+  WATCH_AUTOPLAY_DURATION_MS,
+  type TimedPlaybackState,
+} from "./heroScrollPhases";
+import { jumpToScrollPosition, lockForwardScroll } from "./scrollAutoplayLock";
 
 interface HeroScrollSectionProps {
   onOpenWaitlist: () => void;
@@ -12,6 +17,14 @@ interface HeroScrollSectionProps {
 export function HeroScrollSection({ onOpenWaitlist }: HeroScrollSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollProgressRef = useRef(0);
+  const watchPlaybackRef = useRef<TimedPlaybackState>({
+    startedAt: null,
+    durationMs: WATCH_AUTOPLAY_DURATION_MS,
+    completed: false,
+    blockedUntilReset: false,
+  });
+  const autoplayUnlockRef = useRef<(() => void) | null>(null);
+  const autoplayTimerRef = useRef<number | null>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const wordmarkRef = useRef<HTMLDivElement>(null);
   const leftColumnRef = useRef<HTMLDivElement>(null);
@@ -22,7 +35,7 @@ export function HeroScrollSection({ onOpenWaitlist }: HeroScrollSectionProps) {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mediaQuery.matches);
 
-    // One shared timeline keeps the positioning and watch-scrub phases in sync.
+    // Positioning remains scroll-driven; the watch sequence plays once on its own.
     let animationFrameId: number;
 
     const handleScroll = () => {
@@ -30,13 +43,74 @@ export function HeroScrollSection({ onOpenWaitlist }: HeroScrollSectionProps) {
       const rect = containerRef.current.getBoundingClientRect();
       const totalScrollable = containerRef.current.offsetHeight - window.innerHeight;
 
-      if (totalScrollable <= 0) return;
+      if (totalScrollable <= 0) {
+        if (mediaQuery.matches) {
+          scrollProgressRef.current = HERO_SCROLL_PHASES.positioningEnd;
+          if (wordmarkRef.current) wordmarkRef.current.style.opacity = "0";
+          if (leftColumnRef.current) {
+            leftColumnRef.current.style.opacity = "1";
+            leftColumnRef.current.style.transform = "translateY(0px)";
+          }
+          if (scrollHintRef.current) {
+            scrollHintRef.current.style.opacity = "0";
+            scrollHintRef.current.style.visibility = "hidden";
+          }
+        }
+        return;
+      }
 
       const progress = Math.max(0, Math.min(1, -rect.top / totalScrollable));
 
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       animationFrameId = requestAnimationFrame(() => {
-        const effectiveProgress = mediaQuery.matches ? 0.85 : progress;
+        const playback = watchPlaybackRef.current;
+        let effectiveProgress = mediaQuery.matches ? 0.85 : progress;
+
+        if (!mediaQuery.matches) {
+          const phaseEnd = HERO_SCROLL_PHASES.positioningEnd;
+          if (progress < phaseEnd - 0.002) {
+            if (playback.startedAt !== null) {
+              playback.startedAt = null;
+              if (autoplayTimerRef.current !== null) {
+                window.clearTimeout(autoplayTimerRef.current);
+                autoplayTimerRef.current = null;
+              }
+              autoplayUnlockRef.current?.();
+              autoplayUnlockRef.current = null;
+            }
+            playback.completed = false;
+            playback.blockedUntilReset = false;
+          } else if (!playback.blockedUntilReset && !playback.completed) {
+            if (playback.startedAt === null) {
+              playback.startedAt = performance.now();
+              window.dispatchEvent(new Event("hero-watch-playback-start"));
+              autoplayUnlockRef.current = lockForwardScroll(() => {
+                playback.startedAt = null;
+                playback.completed = false;
+                playback.blockedUntilReset = true;
+                if (autoplayTimerRef.current !== null) {
+                  window.clearTimeout(autoplayTimerRef.current);
+                  autoplayTimerRef.current = null;
+                }
+                autoplayUnlockRef.current = null;
+              });
+              autoplayTimerRef.current = window.setTimeout(() => {
+                playback.startedAt = null;
+                playback.completed = true;
+                autoplayTimerRef.current = null;
+                autoplayUnlockRef.current?.();
+                autoplayUnlockRef.current = null;
+              }, playback.durationMs);
+            }
+
+            const boundaryY = window.scrollY + rect.top + totalScrollable * phaseEnd;
+            if (Math.abs(window.scrollY - boundaryY) > 1) {
+              jumpToScrollPosition(boundaryY);
+            }
+            effectiveProgress = phaseEnd;
+          }
+        }
+
         scrollProgressRef.current = effectiveProgress;
 
         const wordmarkOpacity = mediaQuery.matches
@@ -87,6 +161,10 @@ export function HeroScrollSection({ onOpenWaitlist }: HeroScrollSectionProps) {
       mediaQuery.removeEventListener("change", handleMediaChange);
       window.removeEventListener("scroll", handleScroll);
       cancelAnimationFrame(animationFrameId);
+      if (autoplayTimerRef.current !== null) {
+        window.clearTimeout(autoplayTimerRef.current);
+      }
+      autoplayUnlockRef.current?.();
     };
   }, []);
 
@@ -122,7 +200,10 @@ export function HeroScrollSection({ onOpenWaitlist }: HeroScrollSectionProps) {
         </div>
 
         {/* Photorealistic Smartwatch Layer (Positioned at z-[5] Behind the 3D Robot Model) */}
-        <WatchHeroLayer scrollProgressRef={scrollProgressRef} />
+        <WatchHeroLayer
+          scrollProgressRef={scrollProgressRef}
+          playbackRef={watchPlaybackRef}
+        />
 
         {/* Full-bleed 3D Canvas with Scaled-Down Product */}
         <div className="absolute inset-0 z-10">

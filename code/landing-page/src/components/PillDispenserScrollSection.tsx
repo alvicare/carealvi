@@ -1,25 +1,27 @@
 "use client";
 
-import React, { useRef, useState, useEffect, useMemo } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { jumpToScrollPosition, lockForwardScroll } from "./scrollAutoplayLock";
 
 /**
  * ==============================================================================
  *  PILL DISPENSER SECTION CONFIGURATION
  * ==============================================================================
- *  Change any value here to tune frame alignment, scaling, lock buffer, and blur.
+ *  Change any value here to tune frame alignment, timed drop, and edge softness.
  *  You can also use the interactive on-screen control pill on the site itself!
  * ==============================================================================
  */
 export const PILL_CONFIG = {
   /**
    * Rendering mode:
-   * - "custom_frames": Scrubs transparent WebP frames in public/dispenser_frames/ extracted from pill.mp4
+   * - "custom_frames": Plays transparent WebP frames in public/dispenser_frames/ extracted from pill.mp4
    * - "raw_frames": Fallback to raw frames
-   * - "video": Directly scrubs pill_dispenser_2s_to_5s.mp4
+   * - "video": Plays pill_dispenser_2s_to_5s.mp4 directly
    */
   mode: "custom_frames" as "custom_frames" | "raw_frames" | "video",
 
   totalFrames: 71,
+  autoPlayDurationMs: 2600,
   rawFramesBaseUrl: "/dispenser_raw_frames/frame_",
   customFramesBaseUrl: "/dispenser_frames/frame_",
   videoSrc: "/pill_dispenser_2s_to_5s.mp4",
@@ -32,8 +34,7 @@ export const PILL_CONFIG = {
   // ("make sure the height of the sectin and the height of the frames are same so the heigts should be equat")
   scale: 1.0,
 
-  // 3. LOCK-IN BUFFER: Fraction of scroll held locked before movement starts
-  // ("once we come to the section lock it in then only the scroll animtion should start")
+  // Lock the stage at this point and play the drop independently of scrolling.
   lockStartBuffer: 0.08,
   lockEndBuffer: 0.06,
 
@@ -53,8 +54,15 @@ export function PillDispenserScrollSection() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const drawCurrentFrameRef = useRef<() => void>(() => {});
-
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const playbackProgressRef = useRef(0);
+  const previousFrameRef = useRef(-1);
+  const playbackStateRef = useRef({
+    startedAt: null as number | null,
+    completed: false,
+    blockedUntilReset: false,
+  });
+  const autoplayUnlockRef = useRef<(() => void) | null>(null);
+  const autoplayTimerRef = useRef<number | null>(null);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -72,10 +80,7 @@ export function PillDispenserScrollSection() {
     return () => window.removeEventListener("resize", updateMobile);
   }, []);
 
-  // 1. Scroll listener matching StatementSection:
-  // - When rect.top > 0, section is still entering from below -> progress stays strictly 0
-  // - Once rect.top <= 0, section is locked sticky at top: 0
-  // - Applies lockStartBuffer so the section settles locked before the drop begins
+  // Scroll only brings the dispenser into its pinned position. The pill then falls on a timer.
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setPrefersReducedMotion(mediaQuery.matches);
@@ -85,8 +90,6 @@ export function PillDispenserScrollSection() {
     };
     mediaQuery.addEventListener("change", handleMediaChange);
 
-    let animationFrameId: number;
-
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
@@ -94,34 +97,74 @@ export function PillDispenserScrollSection() {
         containerRef.current.offsetHeight - window.innerHeight;
 
       if (totalScrollable <= 0) return;
-
-      // When section is still entering the viewport from below, lock at progress 0
-      if (rect.top > 0) {
-        animationFrameId = requestAnimationFrame(() => {
-          setScrollProgress(0);
-        });
-        return;
-      }
-
-      // Once locked at top <= 0:
       const rawProgress = Math.max(0, Math.min(1, -rect.top / totalScrollable));
+      const playback = playbackStateRef.current;
+      const triggerProgress = PILL_CONFIG.lockStartBuffer;
 
-      // Apply lock buffers (hold at start, animate in middle, hold at end)
-      const startBuf = PILL_CONFIG.lockStartBuffer;
-      const endBuf = PILL_CONFIG.lockEndBuffer;
+      if (rawProgress < triggerProgress - 0.002) {
+        if (playback.startedAt !== null) {
+          playback.startedAt = null;
+          if (autoplayTimerRef.current !== null) {
+            window.clearTimeout(autoplayTimerRef.current);
+            autoplayTimerRef.current = null;
+          }
+          autoplayUnlockRef.current?.();
+          autoplayUnlockRef.current = null;
+        }
+        playback.completed = false;
+        playback.blockedUntilReset = false;
+        playbackProgressRef.current = 0;
+        previousFrameRef.current = -1;
+        if (PILL_CONFIG.mode === "video" && videoRef.current) {
+          videoRef.current.pause();
+          videoRef.current.currentTime = 0;
+        }
+        drawCurrentFrameRef.current();
+      } else if (
+        !mediaQuery.matches &&
+        !playback.blockedUntilReset &&
+        !playback.completed
+      ) {
+        if (playback.startedAt === null) {
+          playback.startedAt = performance.now();
+          playbackProgressRef.current = 0;
+          previousFrameRef.current = -1;
+          window.dispatchEvent(new Event("pill-dispenser-playback-start"));
+          autoplayUnlockRef.current = lockForwardScroll(() => {
+            playback.startedAt = null;
+            playback.completed = false;
+            playback.blockedUntilReset = true;
+            playbackProgressRef.current = 0;
+            previousFrameRef.current = -1;
+            if (autoplayTimerRef.current !== null) {
+              window.clearTimeout(autoplayTimerRef.current);
+              autoplayTimerRef.current = null;
+            }
+            if (PILL_CONFIG.mode === "video" && videoRef.current) {
+              videoRef.current.pause();
+              videoRef.current.currentTime = 0;
+            }
+            drawCurrentFrameRef.current();
+            autoplayUnlockRef.current = null;
+          });
+          if (PILL_CONFIG.mode === "video" && videoRef.current) {
+            videoRef.current.currentTime = 0;
+            void videoRef.current.play();
+          }
+          autoplayTimerRef.current = window.setTimeout(() => {
+            playback.startedAt = null;
+            playback.completed = true;
+            playbackProgressRef.current = 1;
+            autoplayTimerRef.current = null;
+            autoplayUnlockRef.current?.();
+            autoplayUnlockRef.current = null;
+            drawCurrentFrameRef.current();
+          }, PILL_CONFIG.autoPlayDurationMs);
+        }
 
-      let effectiveProgress = 0;
-      if (rawProgress <= startBuf) {
-        effectiveProgress = 0;
-      } else if (rawProgress >= 1 - endBuf) {
-        effectiveProgress = 1;
-      } else {
-        effectiveProgress = (rawProgress - startBuf) / (1 - startBuf - endBuf);
+        const boundaryY = window.scrollY + rect.top + totalScrollable * triggerProgress;
+        if (Math.abs(window.scrollY - boundaryY) > 1) jumpToScrollPosition(boundaryY);
       }
-
-      animationFrameId = requestAnimationFrame(() => {
-        setScrollProgress(effectiveProgress);
-      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -130,7 +173,8 @@ export function PillDispenserScrollSection() {
     return () => {
       mediaQuery.removeEventListener("change", handleMediaChange);
       window.removeEventListener("scroll", handleScroll);
-      cancelAnimationFrame(animationFrameId);
+      if (autoplayTimerRef.current !== null) window.clearTimeout(autoplayTimerRef.current);
+      autoplayUnlockRef.current?.();
     };
   }, []);
 
@@ -186,21 +230,7 @@ export function PillDispenserScrollSection() {
     };
   }, [isMobile]);
 
-  // 3. Compute active frame index (0..70)
-  const currentFrameIndex = useMemo(() => {
-    const frameCount = isMobile
-      ? Math.ceil(PILL_CONFIG.totalFrames / 2) + (PILL_CONFIG.totalFrames % 2 === 0 ? 1 : 0)
-      : PILL_CONFIG.totalFrames;
-    return Math.min(
-      frameCount - 1,
-      Math.max(
-        0,
-        Math.floor(scrollProgress * (frameCount - 1))
-      )
-    );
-  }, [scrollProgress, isMobile]);
-
-  // 4. Render to Canvas: Height of frame equals height of section!
+  // Render each timed frame directly; playback does not cause React renders.
   const drawCurrentFrame = () => {
     if (PILL_CONFIG.mode === "video") return;
     const canvas = canvasRef.current;
@@ -208,8 +238,15 @@ export function PillDispenserScrollSection() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const frameCount = imagesRef.current.length;
+    const currentFrameIndex = Math.min(
+      frameCount - 1,
+      Math.floor(playbackProgressRef.current * Math.max(0, frameCount - 1))
+    );
+    if (currentFrameIndex === previousFrameRef.current) return;
     const currentImg = imagesRef.current[currentFrameIndex];
     if (currentImg && currentImg.complete && currentImg.naturalWidth > 0) {
+      previousFrameRef.current = currentFrameIndex;
       const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
       const displayWidth = canvas.clientWidth;
       const displayHeight = canvas.clientHeight;
@@ -243,16 +280,35 @@ export function PillDispenserScrollSection() {
 
   useEffect(() => {
     drawCurrentFrame();
-  }, [currentFrameIndex, imagesLoaded, offsetX, scale]);
+  }, [imagesLoaded, offsetX, scale, isMobile]);
 
-  // 5. Video scrubbing handler if video mode is chosen
+  // Drive the frame canvas from elapsed time rather than the scroll position.
   useEffect(() => {
-    if (PILL_CONFIG.mode !== "video") return;
-    const video = videoRef.current;
-    if (!video || !video.duration) return;
-
-    video.currentTime = scrollProgress * video.duration;
-  }, [scrollProgress]);
+    let rafId: number | null = null;
+    const tick = () => {
+      const playback = playbackStateRef.current;
+      if (playback.startedAt === null) {
+        rafId = null;
+        return;
+      }
+      playbackProgressRef.current = Math.min(
+        1,
+        (performance.now() - playback.startedAt) / PILL_CONFIG.autoPlayDurationMs
+      );
+      drawCurrentFrameRef.current();
+      rafId = requestAnimationFrame(tick);
+    };
+    const handlePlaybackStart = () => {
+      if (playbackStateRef.current.startedAt !== null && rafId === null) {
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+    window.addEventListener("pill-dispenser-playback-start", handlePlaybackStart);
+    return () => {
+      window.removeEventListener("pill-dispenser-playback-start", handlePlaybackStart);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   return (
     <section
@@ -277,6 +333,7 @@ export function PillDispenserScrollSection() {
               className="w-full h-full object-cover select-none pointer-events-none"
               style={{
                 transform: `translateX(${offsetX}px) scale(${scale})`,
+                filter: "blur(0.7px)",
               }}
             />
           ) : (
@@ -287,6 +344,7 @@ export function PillDispenserScrollSection() {
                 width: "100%",
                 height: "100%",
                 display: "block",
+                filter: "blur(0.7px)",
               }}
             />
           )}

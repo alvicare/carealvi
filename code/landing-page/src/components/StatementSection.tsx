@@ -89,30 +89,18 @@ export function StatementSection() {
           {/* Word-by-Word Scrubbed Reveal (Activates only when pinned) */}
           <p
             className="text-[26px] sm:text-[34px] md:text-[42px] lg:text-[46px] leading-[1.3] sm:leading-[1.28] font-light tracking-[-0.02em] text-center"
-            style={{ color: "#1E2023" }}
+            style={{ color: "var(--brand-teal)" }}
           >
             {words.map((word, index) => {
-              // Keep the opening promise in brand teal as the rest of the sentence reveals.
               let opacity = 0.25;
 
-              if (index <= 1) {
-                opacity = 1;
-              } else {
-                // Map remaining words across scroll progress
-                const totalRemaining = words.length - 2;
-                const wordTargetProgress = (index - 2) / totalRemaining;
-
-                if (scrollProgress >= wordTargetProgress) {
-                  const localProgress = Math.min(
-                    1,
-                    Math.max(
-                      0,
-                      (scrollProgress - wordTargetProgress) *
-                        (totalRemaining / 2.0)
-                    )
-                  );
-                  opacity = 0.25 + 0.75 * localProgress;
-                }
+              const wordTargetProgress = index / words.length;
+              if (scrollProgress >= wordTargetProgress) {
+                const localProgress = Math.min(
+                  1,
+                  Math.max(0, (scrollProgress - wordTargetProgress) * (words.length / 2))
+                );
+                opacity = 0.25 + 0.75 * localProgress;
               }
 
               return (
@@ -121,7 +109,7 @@ export function StatementSection() {
                   className="inline-block mx-[0.16em] transition-opacity duration-150"
                   style={{
                     opacity,
-                    color: index <= 3 ? "var(--brand-teal)" : "#1E2023",
+                    color: "var(--brand-teal)",
                   }}
                 >
                   {word}
